@@ -43,7 +43,9 @@
                         <div class="flex-1">
                             <div class="flex justify-between items-center">
                                 <div>
-                                    <span class="text-gray-800 dark:text-gray-200 font-semibold">{{ $thread->user->username }}</span>
+                                    <a href="{{ route('profile.show', $thread->user->username) }}" class="text-gray-800 dark:text-gray-200 font-semibold hover:underline">
+                                        {{ $thread->user->username }}
+                                    </a>
                                     <small class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ $thread->created_at->diffForHumans() }}</small>
                                 </div>
                             </div>
