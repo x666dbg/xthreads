@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ThreadController;
 use App\Http\Controllers\ReplyController;
+use App\Http\Controllers\LikeController;
+use App\Http\Controllers\RepostController;
 use App\Http\Controllers\UserProfileController;
 
 // 1. Route utama, arahkan ke login
@@ -23,6 +25,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/threads', [ThreadController::class, 'store'])->name('threads.store');
     Route::get('/threads/{thread}', [ThreadController::class, 'show'])->name('threads.show');
     Route::post('/threads/{thread}/replies', [ReplyController::class, 'store'])->name('replies.store');
+
+    Route::post('/threads/{thread}/like', [LikeController::class, 'likeThread'])->name('threads.like');
+    Route::delete('/threads/{thread}/unlike', [LikeController::class, 'unlikeThread'])->name('threads.unlike');
+    Route::post('/replies/{reply}/like', [LikeController::class, 'likeReply'])->name('replies.like');
+    Route::delete('/replies/{reply}/unlike', [LikeController::class, 'unlikeReply'])->name('replies.unlike');
+
+    Route::post('/threads/{thread}/repost', [RepostController::class, 'store'])->name('threads.repost');
+    Route::delete('/threads/{thread}/repost', [RepostController::class, 'destroy'])->name('threads.repost.destroy');
 
     // Route untuk PENGATURAN PROFIL (bawaan Breeze).
     // Ini harus ada SEBELUM route profil publik.

@@ -3,19 +3,53 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Repost;
 use App\Models\Thread;
 
 class ThreadController extends Controller
 {
     // Method untuk menampilkan semua thread di dashboard
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil semua thread, beserta data user-nya, urutkan dari yang terbaru
-        $threads = Thread::with('user')->latest()->get();
+        $user = $request->user();
 
-        // Kirim data threads ke view 'dashboard'
+        // Ambil ID orang yang di-follow, dan tambahkan ID user sendiri
+        $followingIds = $user->following()->pluck('id')->push($user->id);
+
+        // Ambil thread asli dari orang-orang tersebut
+        $threads = Thread::whereIn('user_id', $followingIds)
+            ->with('user', 'likes') // Eager load relasi
+            ->latest()
+            ->get();
+
+        // Ambil reposts dari orang-orang tersebut
+        // Di sini kita ubah struktur data agar mirip dengan 'thread'
+        // $reposts = \App\Models\Repost::whereIn('user_id', $followingIds)
+        $reposts = Repost::whereIn('user_id', $followingIds)
+            ->with(['user', 'thread.user', 'thread.likes']) // Eager load relasi dalam
+            ->latest()
+            ->get()
+            ->map(function ($repost) {
+                // Kita buat 'objek' baru yang seragam
+                return (object) [
+                    'is_repost' => true,
+                    'reposted_by' => $repost->user, // Siapa yang me-repost
+                    'original_thread' => $repost->thread, // Thread aslinya
+                    'created_at' => $repost->created_at, // Waktu repost
+                ];
+            });
+
+        // Gabungkan thread asli dan repost, lalu urutkan berdasarkan waktu terbaru
+        $timeline = $threads->map(function($thread) {
+            return (object) [
+                'is_repost' => false,
+                'original_thread' => $thread,
+                'created_at' => $thread->created_at,
+            ];
+        })->concat($reposts)->sortByDesc('created_at');
+
         return view('dashboard', [
-            'threads' => $threads,
+            'timeline' => $timeline,
         ]);
     }
 

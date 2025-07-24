@@ -61,6 +61,21 @@
                             <p class="mt-2 text-gray-900 dark:text-gray-100">
                                 {{ $reply->content }}
                             </p>
+                            <div class="flex items-center mt-2 text-sm">
+                                @if ($reply->isLikedBy(auth()->user()))
+                                    <form action="{{ route('replies.unlike', $reply) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-500 hover:text-red-600">Unlike</button>
+                                    </form>
+                                @else
+                                    <form action="{{ route('replies.like', $reply) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="text-gray-500 hover:text-gray-600">Like</button>
+                                    </form>
+                                @endif
+                                <span class="ml-2 text-gray-500">{{ $reply->likes->count() }} Likes</span>
+                            </div>
                         </div>
                     </div>
                 @endforeach

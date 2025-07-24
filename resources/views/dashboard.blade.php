@@ -32,8 +32,13 @@
 
             {{-- DAFTAR SEMUA THREADS --}}
             <div class="mt-6 bg-white dark:bg-gray-800 shadow-sm rounded-lg divide-y dark:divide-gray-700">
-                @foreach ($threads as $thread)
-                    <div class="p-6 flex space-x-4">
+                @foreach ($timeline as $item)
+                    @php
+                        // Kita ambil thread asli, entah itu dari item biasa atau dari repost
+                        $thread = $item->original_thread;
+                    @endphp
+
+                    <div class="p-6 flex space-x-4 border-b border-gray-200 dark:border-gray-700">
                         {{-- Avatar Sederhana --}}
                         <div class="flex-shrink-0">
                             <svg class="h-10 w-10 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
@@ -41,12 +46,20 @@
                             </svg>
                         </div>
                         <div class="flex-1">
+                            {{-- Tampilkan notifikasi jika ini adalah repost --}}
+                            @if ($item->is_repost)
+                                <div class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                                    <svg class="inline-block w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5M20 20v-5h-5M4 20h5v-5M20 4h-5v5"/></svg>
+                                    Direpost oleh <a href="{{ route('profile.show', $item->reposted_by->username) }}" class="font-semibold hover:underline">{{ $item->reposted_by->username }}</a>
+                                </div>
+                            @endif
+
                             <div class="flex justify-between items-center">
                                 <div>
                                     <a href="{{ route('profile.show', $thread->user->username) }}" class="text-gray-800 dark:text-gray-200 font-semibold hover:underline">
                                         {{ $thread->user->username }}
                                     </a>
-                                    <small class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ $thread->created_at->diffForHumans() }}</small>
+                                    <small class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ $item->created_at->diffForHumans() }}</small>
                                 </div>
                             </div>
                             <a href="{{ route('threads.show', $thread) }}">
@@ -54,6 +67,43 @@
                                     {{ $thread->content }}
                                 </p>
                             </a>
+
+                            {{-- Tombol Aksi (Like & Repost) --}}
+                            <div class="flex items-center mt-4 text-sm space-x-4">
+                                {{-- Tombol Like --}}
+                                <div class="flex items-center">
+                                    @if ($thread->isLikedBy(auth()->user()))
+                                        <form action="{{ route('threads.unlike', $thread) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-500 hover:text-red-600">Unlike</button>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('threads.like', $thread) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="text-gray-500 hover:text-gray-600">Like</button>
+                                        </form>
+                                    @endif
+                                    <span class="ml-1 text-gray-500">{{ $thread->likes->count() }}</span>
+                                </div>
+
+                                {{-- Tombol Repost --}}
+                                <div class="flex items-center">
+                                    @if (auth()->user()->reposts->contains($thread))
+                                        <form action="{{ route('threads.repost.destroy', $thread) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-green-500 hover:text-green-600">Un-repost</button>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('threads.repost', $thread) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="text-gray-500 hover:text-gray-600">Repost</button>
+                                        </form>
+                                    @endif
+                                    <span class="ml-1 text-gray-500">{{ $thread->repostedBy->count() }}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 @endforeach

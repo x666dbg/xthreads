@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Concerns\Likeable;
 
 class Thread extends Model
 {
-    use HasFactory;
+    use HasFactory, Likeable;
 
     // Kolom yang boleh diisi
     protected $fillable = [
@@ -27,4 +28,10 @@ class Thread extends Model
     {
         return $this->hasMany(Reply::class);
     }
+
+    public function repostedBy()
+    {
+        return $this->belongsToMany(User::class, 'reposts', 'thread_id', 'user_id');
+    }
+
 }
