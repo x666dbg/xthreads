@@ -84,8 +84,8 @@
                                     <p class="mt-2 text-lg text-gray-900 dark:text-gray-100">{{ $thread->content }}</p>
                                 </a>
                                 @if ($thread->image)
-                                    <div class="mt-4">
-                                        <img src="{{ Storage::url($thread->image) }}" alt="Gambar Thread" class="rounded-lg w-full object-cover">
+                                    <div class="mt-4 max-w-lg overflow-hidden rounded-lg border dark:border-gray-700">
+                                        <img src="{{ Storage::url($thread->image) }}" alt="Gambar Thread" class="w-full">
                                     </div>
                                 @endif
                             </div>
