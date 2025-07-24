@@ -67,20 +67,24 @@
                                     <small class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ $item->created_at->diffForHumans() }}</small>
                                 </div>
                             </div>
-                            <a href="{{ route('threads.show', $thread) }}">
-                                <p class="mt-2 text-lg text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400">
-                                    {{ $thread->content }}
-                                </p>
+
+                            {{-- =================== PERUBAHAN PENTING DI SINI =================== --}}
+
+                            {{-- 1. LINK HANYA MEMBUNGKUS KONTEN --}}
+                            <a href="{{ route('threads.show', $thread) }}" class="block mt-2">
+                                <p class="text-lg text-gray-900 dark:text-gray-100">{{ $thread->content }}</p>
+
+                                @if ($thread->image)
+                                    <div class="mt-4 max-w-lg overflow-hidden rounded-lg border dark:border-gray-700">
+                                        <img src="{{ Storage::url($thread->image) }}" alt="Gambar Thread" class="w-full">
+                                    </div>
+                                @endif
                             </a>
 
-                            @if ($thread->image)
-                                <div class="mt-4 max-w-lg overflow-hidden rounded-lg border dark:border-gray-700">
-                                    <img src="{{ Storage::url($thread->image) }}" alt="Gambar Thread" class="w-full">
-                                </div>
-                            @endif
-
-                            {{-- Tombol Aksi (Like & Repost) --}}
+                            {{-- 2. TOMBOL AKSI BERADA DI LUAR LINK --}}
                             <x-thread-actions :thread="$thread" />
+
+                            {{-- ================================================================= --}}
                         </div>
                     </div>
                 @endforeach
