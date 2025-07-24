@@ -29,6 +29,9 @@
                                 <img src="{{ Storage::url($thread->image) }}" alt="Thread image" class="rounded-lg w-full object-cover">
                             </div>
                         @endif
+                        <div class="mt-4">
+                            <x-thread-actions :thread="$thread" />
+                        </div>
                     </div>
                 </div>
             </div>

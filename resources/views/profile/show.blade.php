@@ -88,6 +88,9 @@
                                         <img src="{{ Storage::url($thread->image) }}" alt="Gambar Thread" class="w-full">
                                     </div>
                                 @endif
+                                <div class="mt-4">
+                                    <x-thread-actions :thread="$thread" />
+                                </div>
                             </div>
                         </div>
                     </div>

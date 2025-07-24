@@ -80,41 +80,7 @@
                             @endif
 
                             {{-- Tombol Aksi (Like & Repost) --}}
-                            <div class="flex items-center mt-4 text-sm space-x-4">
-                                {{-- Tombol Like --}}
-                                <div class="flex items-center">
-                                    @if ($thread->isLikedBy(auth()->user()))
-                                        <form action="{{ route('threads.unlike', $thread) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-500 hover:text-red-600">Unlike</button>
-                                        </form>
-                                    @else
-                                        <form action="{{ route('threads.like', $thread) }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="text-gray-500 hover:text-gray-600">Like</button>
-                                        </form>
-                                    @endif
-                                    <span class="ml-1 text-gray-500">{{ $thread->likes->count() }}</span>
-                                </div>
-
-                                {{-- Tombol Repost --}}
-                                <div class="flex items-center">
-                                    @if (auth()->user()->reposts->contains($thread))
-                                        <form action="{{ route('threads.repost.destroy', $thread) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-green-500 hover:text-green-600">Un-repost</button>
-                                        </form>
-                                    @else
-                                        <form action="{{ route('threads.repost', $thread) }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="text-gray-500 hover:text-gray-600">Repost</button>
-                                        </form>
-                                    @endif
-                                    <span class="ml-1 text-gray-500">{{ $thread->repostedBy->count() }}</span>
-                                </div>
-                            </div>
+                            <x-thread-actions :thread="$thread" />
                         </div>
                     </div>
                 @endforeach
