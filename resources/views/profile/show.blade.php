@@ -83,6 +83,11 @@
                                 <a href="{{ route('threads.show', $thread) }}">
                                     <p class="mt-2 text-lg text-gray-900 dark:text-gray-100">{{ $thread->content }}</p>
                                 </a>
+                                @if ($thread->image)
+                                    <div class="mt-4">
+                                        <img src="{{ Storage::url($thread->image) }}" alt="Gambar Thread" class="rounded-lg w-full object-cover">
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>

@@ -10,18 +10,23 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     {{-- FORM UNTUK POSTING THREAD BARU --}}
-                    <form method="POST" action="{{ route('threads.store') }}">
+                    <form method="POST" action="{{ route('threads.store') }}" enctype="multipart/form-data">
                         @csrf
                         <textarea
                             name="content"
                             rows="3"
                             class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600"
-                            placeholder="Apa yang kamu pikirkan, {{ Auth::user()->name }}?"></textarea>
-                        
-                        {{-- Menampilkan error validasi --}}
+                            placeholder="Apa yang kamu pikirkan, {{ auth()->user()->username }}?"></textarea>
                         @error('content')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
+
+                        {{-- TAMBAHKAN INPUT UNTUK GAMBAR DI SINI --}}
+                        <div class="mt-4">
+                            <x-input-label for="image" :value="__('Gambar (Opsional)')" />
+                            <x-text-input id="image" name="image" type="file" class="mt-1 block w-full" />
+                            <x-input-error class="mt-2" :messages="$errors->get('image')" />
+                        </div>
 
                         <x-primary-button class="mt-4">
                             {{ __('Post Thread') }}
@@ -67,6 +72,12 @@
                                     {{ $thread->content }}
                                 </p>
                             </a>
+
+                            @if ($thread->image)
+                                <div class="mt-4 max-w-lg overflow-hidden rounded-lg border dark:border-gray-700">
+                                    <img src="{{ Storage::url($thread->image) }}" alt="Gambar Thread" class="w-full">
+                                </div>
+                            @endif
 
                             {{-- Tombol Aksi (Like & Repost) --}}
                             <div class="flex items-center mt-4 text-sm space-x-4">

@@ -16,6 +16,7 @@ class Thread extends Model
     protected $fillable = [
         'content',
         'user_id',
+        'image',
     ];
 
     // Definisikan relasi: Setiap Thread dimiliki oleh satu User

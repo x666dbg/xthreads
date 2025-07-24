@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Repost;
 use App\Models\Thread;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class ThreadController extends Controller
 {
@@ -48,15 +51,33 @@ class ThreadController extends Controller
     // Method untuk menyimpan thread baru
     public function store(Request $request)
     {
-        // 1. Validasi input
         $validated = $request->validate([
             'content' => 'required|string|max:280',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // 2. Simpan ke database menggunakan relasi
+        if ($request->hasFile('image')) {
+            // 1. Buat manager dengan driver (GD lebih umum)
+            $manager = new ImageManager(new Driver());
+
+            // 2. Baca gambar dari file yang di-upload
+            $image = $manager->read($request->file('image'));
+
+            // 3. Ubah ukuran gambar (sintaks baru di v3)
+            $image->scale(width: 1080);
+
+            // 4. Buat nama file unik dan path
+            $fileName = uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
+            $path = "threads/{$fileName}";
+
+            // 5. Simpan gambar yang sudah diubah ukurannya
+            Storage::disk('public')->put($path, $image->toJpeg(80)); // Simpan sebagai format Jpeg
+
+            $validated['image'] = $path;
+        }
+
         $request->user()->threads()->create($validated);
 
-        // 3. Kembali ke halaman sebelumnya dengan pesan sukses
         return redirect(route('dashboard'))->with('success', 'Thread berhasil diposting!');
     }
 
