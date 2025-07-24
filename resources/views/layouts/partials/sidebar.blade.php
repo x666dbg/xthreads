@@ -30,8 +30,28 @@
         </nav>
 
         {{-- Info User & Logout --}}
-        <div class="mt-auto">
-             <form method="POST" action="{{ route('logout') }}">
+        <div class="mt-auto group">
+            {{-- User Info --}}
+            <div class="flex items-center space-x-3 px-4 py-3">
+                {{-- Avatar Kecil --}}
+                <div class="flex-shrink-0">
+                    <svg class="h-10 w-10 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M24 20.993V24H0v-2.997A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                </div>
+                {{-- Nama dan Username --}}
+                <div class="flex-1 min-w-0">
+                    {{-- Nama Lengkap (terpotong jika panjang) --}}
+                    <p class="font-semibold text-white truncate">
+                        {{ auth()->user()->username }}
+                    </p>
+                    {{-- Username (terpotong jika panjang) --}}
+                    <p class="text-sm text-gray-400 truncate">
+                        @ {{ auth()->user()->username }}
+                    </p>
+                </div>
+            </div>
+
+            {{-- Tombol Logout --}}
+            <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="flex items-center w-full space-x-3 text-white text-left text-lg font-semibold px-4 py-3 hover:bg-gray-700 rounded-full">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>

@@ -16,12 +16,10 @@
         </div>
         <p class="mt-1 text-gray-100">{{ $reply->content }}</p>
 
-        {{-- Tombol Aksi untuk Balasan (Like, Balas) --}}
+        {{-- Tombol Aksi untuk Balasan --}}
         <div class="mt-2 flex items-center space-x-4 text-sm">
-            {{-- Tombol Like (bisa ditambahkan nanti) --}}
             <button
                 type="button"
-                {{-- Ini akan membuka modal, mengirim ID thread dan ID balasan ini sebagai parentId --}}
                 onclick="openReplyModal({{ $reply->thread_id }}, {{ $reply->id }})"
                 class="font-semibold text-gray-400 hover:underline"
             >
@@ -30,11 +28,13 @@
         </div>
 
         {{-- Bagian Rekursif: Tampilkan semua balasan dari balasan ini --}}
-        <div class="mt-4 space-y-4 border-l-2 border-gray-700 pl-4">
-            @foreach ($reply->children as $childReply)
-                {{-- Panggil komponen ini lagi untuk setiap anak --}}
-                <x-reply :reply="$childReply" />
-            @endforeach
-        </div>
+        @if ($reply->children->isNotEmpty())
+            <div class="mt-4 space-y-4 border-l-2 border-gray-700 pl-4">
+                @foreach ($reply->children as $childReply)
+                    {{-- Panggil komponen ini lagi untuk setiap anak --}}
+                    <x-reply :reply="$childReply" />
+                @endforeach
+            </div>
+        @endif
     </div>
 </div>

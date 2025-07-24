@@ -36,10 +36,11 @@
                     </form>
                 </div>
             </div>
-            <div class="mt-6 bg-gray-800 shadow-sm rounded-lg divide-y divide-gray-700">
-                {{-- Ambil hanya balasan level pertama (yang parent_id-nya null) --}}
-                @foreach ($thread->replies()->whereNull('parent_id')->latest()->get() as $reply)
+            <div class="mt-6 bg-white dark:bg-gray-800 shadow-sm rounded-lg divide-y dark:divide-gray-700">
+                {{-- Ganti seluruh isi blok ini --}}
+                @foreach ($thread->replies as $reply)
                     <div class="p-6">
+                        {{-- Panggil komponen untuk setiap balasan level pertama --}}
                         <x-reply :reply="$reply" />
                     </div>
                 @endforeach

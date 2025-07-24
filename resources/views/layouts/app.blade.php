@@ -46,11 +46,11 @@
 
         {{-- Fungsi Global untuk Membuka Modal --}}
         <script>
-            function openReplyModal(threadId, parentId = null) { // Tambahkan parentId
+            function openReplyModal(threadId, parentId = null) {
                 window.dispatchEvent(new CustomEvent('open-reply-modal', {
                     detail: {
                         threadId: threadId,
-                        parentId: parentId // Kirim parentId
+                        parentId: parentId
                     }
                 }));
             }

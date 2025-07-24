@@ -83,9 +83,14 @@ class ThreadController extends Controller
 
     public function show(Thread $thread)
     {
-        $thread->load(['replies' => function ($query) {
-            $query->whereNull('parent_id')->with(['user', 'children.user'])->latest();
-        }]);
+        $thread->load([
+            'user',
+            'likes',
+            'repostedBy',
+            'replies' => function ($query) {
+                $query->whereNull('parent_id')->latest();
+            }
+        ]);
 
         return view('threads.show', [
             'thread' => $thread
