@@ -1,10 +1,10 @@
 @props(['thread'])
 
 <div class="flex items-center mt-4 text-sm space-x-4">
-    {{-- Tombol Komentar --}}
+    {{-- Tombol Komentar (Quick Reply) --}}
     <button
-        {{-- @click.prevent="$dispatch('open-reply-modal', { threadId: {{ $thread->id }} })" --}}
-        @click.prevent="console.log('Mengirim sinyal open-reply-modal untuk thread ID:', {{ $thread->id }}); $dispatch('open-reply-modal', { threadId: {{ $thread->id }} })"
+        type="button"
+        onclick="openReplyModal({{ $thread->id }})"
         class="flex items-center space-x-1 text-gray-500 hover:text-blue-500"
     >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
@@ -13,7 +13,7 @@
 
     {{-- Tombol Repost --}}
     <div class="flex items-center">
-         @if (auth()->user()->reposts->contains($thread))
+        @if (auth()->user()->reposts->contains($thread))
             <form action="{{ route('threads.repost.destroy', $thread) }}" method="POST">
                 @csrf
                 @method('DELETE')

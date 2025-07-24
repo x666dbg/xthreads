@@ -11,12 +11,12 @@ class ReplyController extends Controller
     {
         $validated = $request->validate([
             'content' => 'required|string|max:280',
+            'parent_id' => 'nullable|exists:replies,id'
         ]);
 
-        $thread->replies()->create([
-            'user_id' => $request->user()->id,
-            'content' => $validated['content'],
-        ]);
+        $validated['user_id'] = $request->user()->id;
+
+        $thread->replies()->create($validated);
 
         return back()->with('success', 'Balasan berhasil dikirim!');
     }

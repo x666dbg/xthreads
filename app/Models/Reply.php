@@ -11,7 +11,7 @@ class Reply extends Model
 {
     use HasFactory, Likeable;
 
-    protected $fillable = ['content', 'user_id', 'thread_id'];
+    protected $fillable = ['content', 'user_id', 'thread_id', 'parent_id'];
 
     public function user(): BelongsTo
     {
@@ -21,5 +21,15 @@ class Reply extends Model
     public function thread(): BelongsTo
     {
         return $this->belongsTo(Thread::class);
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Reply::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(Reply::class, 'parent_id')->with('children');
     }
 }

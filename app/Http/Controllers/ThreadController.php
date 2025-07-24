@@ -83,8 +83,9 @@ class ThreadController extends Controller
 
     public function show(Thread $thread)
     {
-        // Muat relasi replies beserta user dari setiap reply
-        $thread->load('replies.user');
+        $thread->load(['replies' => function ($query) {
+            $query->whereNull('parent_id')->with(['user', 'children.user'])->latest();
+        }]);
 
         return view('threads.show', [
             'thread' => $thread
