@@ -53,16 +53,42 @@
             </div>
 
             <div class="mt-6 bg-white dark:bg-gray-800 shadow-sm rounded-lg divide-y dark:divide-gray-700">
-                @forelse ($threads as $thread)
+                @forelse ($timeline as $item)
+                    @php
+                        // Ambil thread asli, baik itu dari item biasa atau dari repost
+                        $thread = $item->original_thread;
+                    @endphp
+
                     <div class="p-6">
-                        <a href="{{ route('threads.show', $thread) }}" class="block">
-                            <p class="text-lg text-gray-900 dark:text-gray-100">{{ $thread->content }}</p>
-                            <small class="mt-2 text-sm text-gray-600 dark:text-gray-400">{{ $thread->created_at->diffForHumans() }}</small>
-                        </a>
+                        {{-- Tampilkan notifikasi jika ini adalah repost --}}
+                        @if ($item->is_repost)
+                            <div class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                                <svg class="inline-block w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5M20 20v-5h-5M4 20h5v-5M20 4h-5v5"/></svg>
+                                Direpost oleh <a href="{{ route('profile.show', $item->reposted_by->username) }}" class="font-semibold hover:underline">{{ $item->reposted_by->username === auth()->user()->username ? 'Anda' : $item->reposted_by->username }}</a>
+                            </div>
+                        @endif
+
+                        <div class="flex space-x-3">
+                            {{-- Avatar kecil untuk thread --}}
+                            <div class="flex-shrink-0">
+                                <svg class="h-10 w-10 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M24 20.993V24H0v-2.997A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <a href="{{ route('profile.show', $thread->user->username) }}" class="font-semibold text-gray-800 dark:text-gray-200 hover:underline">{{ $thread->user->username }}</a>
+                                        <small class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ $item->created_at->diffForHumans() }}</small>
+                                    </div>
+                                </div>
+                                <a href="{{ route('threads.show', $thread) }}">
+                                    <p class="mt-2 text-lg text-gray-900 dark:text-gray-100">{{ $thread->content }}</p>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 @empty
                     <div class="p-6 text-center text-gray-500 dark:text-gray-400">
-                        <p>@ {{ $user->username }} belum memposting thread apapun.</p>
+                        <p>@ {{ $user->username }} belum memposting atau merepost apapun.</p>
                     </div>
                 @endforelse
             </div>

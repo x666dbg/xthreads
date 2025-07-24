@@ -11,43 +11,35 @@ class ThreadController extends Controller
     // Method untuk menampilkan semua thread di dashboard
     public function index(Request $request)
     {
-        $user = $request->user();
-
-        // Ambil ID orang yang di-follow, dan tambahkan ID user sendiri
-        $followingIds = $user->following()->pluck('id')->push($user->id);
-
-        // Ambil thread asli dari orang-orang tersebut
-        $threads = Thread::whereIn('user_id', $followingIds)
-            ->with('user', 'likes') // Eager load relasi
+        // 1. Ambil SEMUA thread asli, tidak lagi memfilter berdasarkan siapa yang di-follow.
+        $threads = Thread::with('user', 'likes', 'repostedBy')
             ->latest()
             ->get();
 
-        // Ambil reposts dari orang-orang tersebut
-        // Di sini kita ubah struktur data agar mirip dengan 'thread'
-        // $reposts = \App\Models\Repost::whereIn('user_id', $followingIds)
-        $reposts = Repost::whereIn('user_id', $followingIds)
-            ->with(['user', 'thread.user', 'thread.likes']) // Eager load relasi dalam
+        // 2. Ambil SEMUA repost.
+        $reposts = Repost::with(['user', 'thread.user', 'thread.likes', 'thread.repostedBy'])
             ->latest()
-            ->get()
-            ->map(function ($repost) {
-                // Kita buat 'objek' baru yang seragam
-                return (object) [
-                    'is_repost' => true,
-                    'reposted_by' => $repost->user, // Siapa yang me-repost
-                    'original_thread' => $repost->thread, // Thread aslinya
-                    'created_at' => $repost->created_at, // Waktu repost
-                ];
-            });
+            ->get();
 
-        // Gabungkan thread asli dan repost, lalu urutkan berdasarkan waktu terbaru
-        $timeline = $threads->map(function($thread) {
+        // 3. Gabungkan dan urutkan. Logika ini tetap sama.
+        $timeline = $threads->map(function ($thread) {
             return (object) [
                 'is_repost' => false,
+                'reposted_by' => null,
                 'original_thread' => $thread,
                 'created_at' => $thread->created_at,
             ];
-        })->concat($reposts)->sortByDesc('created_at');
+        })->concat($reposts->map(function ($repost) {
+            return (object) [
+                'is_repost' => true,
+                'reposted_by' => $repost->user,
+                'original_thread' => $repost->thread,
+                'created_at' => $repost->created_at,
+            ];
+        }))
+        ->sortByDesc('created_at');
 
+        // 4. Kirim ke view.
         return view('dashboard', [
             'timeline' => $timeline,
         ]);

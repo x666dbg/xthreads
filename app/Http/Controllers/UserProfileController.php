@@ -11,9 +11,41 @@ class UserProfileController extends Controller
 {
     public function show(User $user): View
     {
+        // 1. Ambil semua THREAD ASLI yang dibuat oleh user ini.
+        $threads = $user->threads()
+            ->with('user', 'likes', 'repostedBy')
+            ->latest()
+            ->get();
+
+        // 2. Ambil semua THREAD YANG DI-REPOST oleh user ini.
+        // Kita gunakan relasi 'reposts()' yang sudah kita buat di model User.
+        $reposts = $user->reposts()
+            ->with('user', 'likes', 'repostedBy')
+            ->get();
+
+        // 3. Gabungkan keduanya, sama seperti di timeline utama.
+        $timeline = $threads->map(function ($thread) {
+            return (object) [
+                'is_repost' => false,
+                'reposted_by' => null,
+                'original_thread' => $thread,
+                'created_at' => $thread->created_at,
+            ];
+        })->concat($reposts->map(function ($repost) use ($user) {
+            return (object) [
+                'is_repost' => true,
+                'reposted_by' => $user, // User yang punya profil ini
+                'original_thread' => $repost, // Di sini, $repost adalah thread aslinya
+                'created_at' => $repost->pivot->created_at, // Waktu repost diambil dari pivot table
+            ];
+        }))
+        // 4. Urutkan timeline gabungan berdasarkan waktu terbaru.
+        ->sortByDesc('created_at');
+
+        // 5. Kirim data ke view.
         return view('profile.show', [
             'user' => $user,
-            'threads' => $user->threads()->latest()->get(),
+            'timeline' => $timeline, // Ganti nama variabel dari 'threads' menjadi 'timeline'
         ]);
     }
 
