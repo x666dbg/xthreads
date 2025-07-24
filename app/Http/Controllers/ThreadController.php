@@ -33,4 +33,14 @@ class ThreadController extends Controller
         // 3. Kembali ke halaman sebelumnya dengan pesan sukses
         return redirect(route('dashboard'))->with('success', 'Thread berhasil diposting!');
     }
+
+    public function show(Thread $thread)
+    {
+        // Muat relasi replies beserta user dari setiap reply
+        $thread->load('replies.user');
+
+        return view('threads.show', [
+            'thread' => $thread
+        ]);
+    }
 }

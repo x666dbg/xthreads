@@ -43,13 +43,15 @@
                         <div class="flex-1">
                             <div class="flex justify-between items-center">
                                 <div>
-                                    <span class="text-gray-800 dark:text-gray-200 font-semibold">{{ $thread->user->name }}</span>
+                                    <span class="text-gray-800 dark:text-gray-200 font-semibold">{{ $thread->user->username }}</span>
                                     <small class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ $thread->created_at->diffForHumans() }}</small>
                                 </div>
                             </div>
-                            <p class="mt-2 text-lg text-gray-900 dark:text-gray-100">
-                                {{ $thread->content }}
-                            </p>
+                            <a href="{{ route('threads.show', $thread) }}">
+                                <p class="mt-2 text-lg text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400">
+                                    {{ $thread->content }}
+                                </p>
+                            </a>
                         </div>
                     </div>
                 @endforeach

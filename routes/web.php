@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ThreadController;
+use App\Http\Controllers\ReplyController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -14,10 +15,15 @@ Route::get('/dashboard', [ThreadController::class, 'index'])
 Route::middleware('auth')->group(function () {
     // Route untuk menyimpan thread
     Route::post('/threads', [ThreadController::class, 'store'])->name('threads.store'); // <-- Tambahkan ini
+    Route::get('/threads/{thread}', [ThreadController::class, 'show'])->name('threads.show');
+    Route::post('/threads/{thread}/replies', [ReplyController::class, 'store'])->name('replies.store');
+
+
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile/{user:username}', ProfileController::class)->name('profile.show');
 });
 
 require __DIR__.'/auth.php';
