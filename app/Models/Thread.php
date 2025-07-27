@@ -17,6 +17,7 @@ class Thread extends Model
         'content',
         'user_id',
         'image',
+        'parent_thread_id',
     ];
 
     // Definisikan relasi: Setiap Thread dimiliki oleh satu User
@@ -24,15 +25,23 @@ class Thread extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function parent()
+    {
+        // return $this->belongsTo(Thread::class, 'parent_thread_id');
+        return $this->belongsTo(Thread::class, 'parent_id');
+    }
+    public function children()
+    {
+        return $this->hasMany(Thread::class, 'parent_id')->with('children');
+    }
 
     public function replies(): HasMany
     {
-        return $this->hasMany(Reply::class);
+        return $this->hasMany(Thread::class, 'parent_thread_id');
     }
 
     public function repostedBy()
     {
         return $this->belongsToMany(User::class, 'reposts', 'thread_id', 'user_id');
     }
-
 }

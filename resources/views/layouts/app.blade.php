@@ -4,23 +4,15 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-
         <title>{{ config('app.name', 'Laravel') }}</title>
-
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased bg-gray-900 text-gray-100">
         <div class="min-h-screen">
-
             <div class="max-w-7xl mx-auto flex">
-
-                {{-- 1. Sidebar Navigasi --}}
                 @include('layouts.partials.sidebar')
-
-                {{-- 2. Konten Utama --}}
                 <main class="flex-1 border-x border-gray-700">
                     @if (isset($header))
                         <header class="bg-gray-800/50 backdrop-blur sticky top-0 border-b border-gray-700">
@@ -29,32 +21,26 @@
                             </div>
                         </header>
                     @endif
-
                     {{ $slot }}
                 </main>
-
-                {{-- 3. Kolom Kanan (Bisa diisi nanti) --}}
                 <div class="w-1/4 px-4 hidden lg:block">
-                    {{-- Placeholder --}}
+                    {{-- Placeholder untuk Kolom Kanan --}}
                 </div>
-
             </div>
         </div>
 
-        {{-- Komponen Modal untuk Quick Reply --}}
-        <x-reply-modal />
+        {{-- Panggil komponen modal baru --}}
+        <x-post-modal />
 
-        {{-- Fungsi Global untuk Membuka Modal --}}
+        {{-- Fungsi JavaScript baru --}}
         <script>
-            function openReplyModal(threadId, parentId = null) {
-                window.dispatchEvent(new CustomEvent('open-reply-modal', {
+            function openPostModal(parentThreadId = null) {
+                window.dispatchEvent(new CustomEvent('open-post-modal', {
                     detail: {
-                        threadId: threadId,
-                        parentId: parentId
+                        parentThreadId: parentThreadId
                     }
                 }));
             }
         </script>
-
     </body>
 </html>

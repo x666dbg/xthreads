@@ -54,6 +54,7 @@ class ThreadController extends Controller
         $validated = $request->validate([
             'content' => 'required|string|max:280',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'parent_thread_id' => 'nullable|exists:threads,id',
         ]);
 
         if ($request->hasFile('image')) {
@@ -78,7 +79,8 @@ class ThreadController extends Controller
 
         $request->user()->threads()->create($validated);
 
-        return redirect(route('dashboard'))->with('success', 'Thread berhasil diposting!');
+        // return redirect(route('dashboard'))->with('success', 'Thread berhasil diposting!');
+        return back()->with('success', 'Postingan berhasil dibuat!');
     }
 
     public function show(Thread $thread)

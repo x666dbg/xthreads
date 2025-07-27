@@ -1,12 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Timeline') }}
-        </h2>
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">{{ __('Timeline') }}</h2>
     </x-slot>
-
     <div class="sm:px-6 lg:px-8">
-        {{-- Form untuk Posting Thread Baru --}}
+        {{-- Form Posting Utama --}}
         <div class="p-6 border-b border-gray-700">
             <form method="POST" action="{{ route('threads.store') }}" enctype="multipart/form-data">
                 @csrf
@@ -21,11 +18,11 @@
             </form>
         </div>
 
-        {{-- Daftar Semua Threads --}}
+        {{-- Daftar Timeline --}}
         <div>
             @foreach ($timeline as $item)
                 @php
-                    $thread = $item->original_thread;
+                    $thread = isset($item->original_thread) ? $item->original_thread : $item;
                 @endphp
                 <div class="p-6 flex space-x-4 border-b border-gray-700">
                     <div class="flex-shrink-0">
@@ -34,26 +31,37 @@
                         </a>
                     </div>
                     <div class="flex-1">
-                        @if ($item->is_repost)
+                        @if (isset($item->is_repost) && $item->is_repost)
                             <div class="mb-2 text-sm text-gray-500 dark:text-gray-400">
                                 <svg class="inline-block w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5M20 20v-5h-5M4 20h5v-5M20 4h-5v5"/></svg>
                                 Direpost oleh <a href="{{ route('profile.show', $item->reposted_by->username) }}" class="font-semibold hover:underline">{{ $item->reposted_by->username }}</a>
                             </div>
                         @endif
                         <div>
-                            <a href="{{ route('profile.show', $thread->user->username) }}" class="font-semibold text-gray-800 dark:text-gray-200 hover:underline">{{ $thread->user->username }}</a>
-                            <small class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ $item->created_at->diffForHumans() }}</small>
+                            <a href="{{ route('profile.show', $thread->user->username) }}" class="font-semibold text-gray-200 hover:underline">{{ $thread->user->username }}</a>
+                            <small class="ml-2 text-sm text-gray-400">{{ $thread->created_at->diffForHumans() }}</small>
                         </div>
-                        <a href="{{ route('threads.show', $thread) }}" class="block mt-2 cursor-pointer">
-                            <p class="text-lg text-gray-900 dark:text-gray-100">{{ $thread->content }}</p>
-                            @if ($thread->image)
-                                <div class="mt-4 max-w-lg overflow-hidden rounded-lg border dark:border-gray-700">
-                                    <img src="{{ Storage::url($thread->image) }}" alt="Gambar Thread" class="w-full">
-                                </div>
-                            @endif
-                        </a>
+
+                        @if ($thread->parent)
+                            <div class="text-sm text-gray-500 mt-1">
+                                Membalas <a href="{{ route('profile.show', $thread->parent->user->username) }}" class="text-blue-400 hover:underline">@ {{ $thread->parent->user->username }}</a>
+                            </div>
+                        @endif
+
+                        <p class="mt-2 text-lg text-gray-100">{{ $thread->content }}</p>
+
+                        @if ($thread->image)
+                            <div class="mt-4 max-w-lg overflow-hidden rounded-lg border dark:border-gray-700">
+                                <img src="{{ Storage::url($thread->image) }}" alt="Gambar Thread" class="w-full">
+                            </div>
+                        @endif
+
+                        @if ($thread->parent)
+                            <x-quoted-thread :thread="$thread->parent" />
+                        @endif
+
                         <div class="mt-4">
-                             <x-thread-actions :thread="$thread" />
+                            <x-thread-actions :thread="$thread" />
                         </div>
                     </div>
                 </div>
