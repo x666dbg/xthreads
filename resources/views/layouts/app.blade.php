@@ -113,15 +113,14 @@
         </div>
 
         {{-- Komponen Modal untuk Quick Reply --}}
-        <x-reply-modal />
+        <x-post-modal />
 
         {{-- Fungsi Global untuk Membuka Modal --}}
         <script>
-            function openReplyModal(threadId, parentId = null) {
-                window.dispatchEvent(new CustomEvent('open-reply-modal', {
+            function openPostModal(parentThreadId = null) {
+                window.dispatchEvent(new CustomEvent('open-post-modal', {
                     detail: {
-                        threadId: threadId,
-                        parentId: parentId
+                        parentThreadId: parentThreadId
                     }
                 }));
             }
