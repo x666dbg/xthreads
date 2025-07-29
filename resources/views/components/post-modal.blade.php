@@ -6,10 +6,7 @@
     x-cloak
     class="fixed inset-0 z-50 flex items-center justify-center p-4"
 >
-    {{-- Latar Belakang Gelap --}}
     <div x-show="show" x-transition.opacity class="fixed inset-0 bg-black/70"></div>
-
-    {{-- Konten Modal --}}
     <div
         x-show="show"
         x-transition
@@ -22,7 +19,6 @@
 
         <form action="{{ route('threads.store') }}" method="POST" enctype="multipart/form-data" class="p-4">
             @csrf
-            {{-- Input tersembunyi untuk mengirim ID thread yang dibalas (induk) --}}
             <input type="hidden" name="parent_id" :value="parentThreadId">
 
             <textarea

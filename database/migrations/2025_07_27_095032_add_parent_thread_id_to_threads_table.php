@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('threads', function (Blueprint $table) {
-            $table->foreignId('parent_thread_id')->nullable()->constrained('threads')->onDelete('cascade')->after('user_id');
+            // Pastikan nama kolom di sini adalah 'parent_id'
+            $table->foreignId('parent_id')->nullable()->constrained('threads')->onDelete('cascade')->after('user_id');
         });
     }
 
@@ -22,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('threads', function (Blueprint $table) {
-            //
+            $table->dropForeign(['parent_id']);
+            $table->dropColumn('parent_id');
         });
     }
 };

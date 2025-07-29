@@ -1,20 +1,12 @@
 <div
-    x-data="{ show: false, threadId: null, parentId: null }"
+    x-data="{ show: false, threadId: null }"
     x-show="show"
-    x-on:open-reply-modal.window="
-        show = true;
-        threadId = $event.detail.threadId;
-        parentId = $event.detail.parentId || null;
-        $nextTick(() => $refs.content.focus())
-    "
+    x-on:open-reply-modal.window="show = true; threadId = $event.detail.threadId; $nextTick(() => $refs.content.focus())"
     x-on:keydown.escape.window="show = false"
     x-cloak
     class="fixed inset-0 z-50 flex items-center justify-center p-4"
 >
-    {{-- Latar Belakang Gelap --}}
     <div x-show="show" x-transition.opacity class="fixed inset-0 bg-black/70"></div>
-
-    {{-- Konten Modal --}}
     <div
         x-show="show"
         x-transition
@@ -24,11 +16,10 @@
         <div class="border-b border-gray-700 p-4">
             <h3 class="text-lg font-semibold">Balas Thread</h3>
         </div>
-
-        <form :action="threadId ? `/threads/${threadId}/replies` : '#'" method="POST" class="p-4">
+        
+        <form action="{{ route('threads.store') }}" method="POST" class="p-4">
             @csrf
-            {{-- Input tersembunyi untuk mengirim parent_id --}}
-            <input type="hidden" name="parent_id" :value="parentId">
+            <input type="hidden" name="parent_id" :value="threadId">
 
             <textarea
                 name="content"
