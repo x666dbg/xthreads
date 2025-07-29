@@ -1,0 +1,450 @@
+{
+	"info": {
+		"_postman_id": "xthreads-api-collection",
+		"name": "XThreads API",
+		"description": "Complete API collection for XThreads social media application",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{auth_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost/api",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    pm.collectionVariables.set('auth_token', response.data.token);",
+									"    pm.test('Registration successful', () => {",
+									"        pm.expect(response.success).to.be.true;",
+									"        pm.expect(response.data.token).to.exist;",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"testuser\",\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "register"]
+						}
+					}
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.collectionVariables.set('auth_token', response.data.token);",
+									"    pm.test('Login successful', () => {",
+									"        pm.expect(response.success).to.be.true;",
+									"        pm.expect(response.data.token).to.exist;",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Get Current User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/me",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "me"]
+						}
+					}
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "logout"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Threads",
+			"item": [
+				{
+					"name": "Get Timeline",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/threads",
+							"host": ["{{base_url}}"],
+							"path": ["threads"]
+						}
+					}
+				},
+				{
+					"name": "Create Thread",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"Hello from Postman! This is a test thread.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/threads",
+							"host": ["{{base_url}}"],
+							"path": ["threads"]
+						}
+					}
+				},
+				{
+					"name": "Create Thread with Image",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "content",
+									"value": "Thread with image attachment",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/threads",
+							"host": ["{{base_url}}"],
+							"path": ["threads"]
+						}
+					}
+				},
+				{
+					"name": "Create Reply",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"This is a reply to the thread!\",\n    \"parent_thread_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/threads",
+							"host": ["{{base_url}}"],
+							"path": ["threads"]
+						}
+					}
+				},
+				{
+					"name": "Get Thread Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/threads/1",
+							"host": ["{{base_url}}"],
+							"path": ["threads", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Thread",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/threads/1",
+							"host": ["{{base_url}}"],
+							"path": ["threads", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Likes",
+			"item": [
+				{
+					"name": "Like Thread",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/threads/1/like",
+							"host": ["{{base_url}}"],
+							"path": ["threads", "1", "like"]
+						}
+					}
+				},
+				{
+					"name": "Unlike Thread",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/threads/1/like",
+							"host": ["{{base_url}}"],
+							"path": ["threads", "1", "like"]
+						}
+					}
+				},
+				{
+					"name": "Toggle Like",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/threads/1/toggle-like",
+							"host": ["{{base_url}}"],
+							"path": ["threads", "1", "toggle-like"]
+						}
+					}
+				},
+				{
+					"name": "Get Thread Likes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/threads/1/likes",
+							"host": ["{{base_url}}"],
+							"path": ["threads", "1", "likes"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Reposts",
+			"item": [
+				{
+					"name": "Repost Thread",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/threads/1/repost",
+							"host": ["{{base_url}}"],
+							"path": ["threads", "1", "repost"]
+						}
+					}
+				},
+				{
+					"name": "Remove Repost",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/threads/1/repost",
+							"host": ["{{base_url}}"],
+							"path": ["threads", "1", "repost"]
+						}
+					}
+				},
+				{
+					"name": "Toggle Repost",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/threads/1/toggle-repost",
+							"host": ["{{base_url}}"],
+							"path": ["threads", "1", "toggle-repost"]
+						}
+					}
+				},
+				{
+					"name": "Get Thread Reposts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/threads/1/reposts",
+							"host": ["{{base_url}}"],
+							"path": ["threads", "1", "reposts"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get User Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/1",
+							"host": ["{{base_url}}"],
+							"path": ["users", "1"]
+						}
+					}
+				},
+				{
+					"name": "Follow User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/1/follow",
+							"host": ["{{base_url}}"],
+							"path": ["users", "1", "follow"]
+						}
+					}
+				},
+				{
+					"name": "Unfollow User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/1/follow",
+							"host": ["{{base_url}}"],
+							"path": ["users", "1", "follow"]
+						}
+					}
+				},
+				{
+					"name": "Toggle Follow",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/1/toggle-follow",
+							"host": ["{{base_url}}"],
+							"path": ["users", "1", "toggle-follow"]
+						}
+					}
+				},
+				{
+					"name": "Get User Followers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/1/followers",
+							"host": ["{{base_url}}"],
+							"path": ["users", "1", "followers"]
+						}
+					}
+				},
+				{
+					"name": "Get User Following",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/1/following",
+							"host": ["{{base_url}}"],
+							"path": ["users", "1", "following"]
+						}
+					}
+				},
+				{
+					"name": "Search Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/search?q=test",
+							"host": ["{{base_url}}"],
+							"path": ["users", "search"],
+							"query": [
+								{
+									"key": "q",
+									"value": "test"
+								}
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}
