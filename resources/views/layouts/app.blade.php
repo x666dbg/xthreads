@@ -12,11 +12,9 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-gradient-to-br from-dark-950 via-dark-900 to-dark-800 text-white min-h-screen">
-        <div x-data="{ sidebarOpen: false }" class="min-h-screen relative">
-            <div class="absolute inset-0 bg-gradient-to-br from-primary-900/10 via-transparent to-secondary-900/10 pointer-events-none"></div>
-
-            <div class="relative max-w-7xl mx-auto flex min-h-screen">
+    <body class="font-sans antialiased bg-gradient-to-br from-dark-950 via-dark-900 to-dark-800 text-white overflow-hidden">
+        <div x-data="{ sidebarOpen: false }">
+            <div class="relative max-w-7xl mx-auto flex h-screen">
 
                 <div class="hidden lg:block">
                     @include('layouts.partials.sidebar')
@@ -44,11 +42,11 @@
                     </div>
                 </div>
 
-                <main class="flex-1 border-x border-dark-700/50 backdrop-blur-sm bg-dark-900/30">
+                <main class="flex-1 border-x border-dark-700/50 backdrop-blur-sm bg-dark-900/30 h-screen overflow-y-auto no-scrollbar">
                     <header class="bg-dark-800/80 backdrop-blur-md sticky top-0 border-b border-dark-700/50 z-10">
                         <div class="relative flex items-center justify-center lg:justify-start h-16 px-4 sm:px-6 lg:px-8">
                             <div class="lg:hidden absolute left-4 top-1/2 -translate-y-1/2">
-                                <button @click.prevent="sidebarOpen = true" class="text-white focus:outline-none">
+                                <button @click.prevent="sidebarOpen = true" class="focus:outline-none">
                                     <div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium">
                                         <span class="text-white font-bold text-xs">{{ strtoupper(substr(auth()->user()->username, 0, 1)) }}</span>
                                     </div>
