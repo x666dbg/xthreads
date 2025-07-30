@@ -1,20 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            @php $currentUser = auth()->user(); @endphp
-            <div>
-                <h2 class="text-2xl font-bold text-white">Home</h2>
-                <p class="text-dark-400 text-sm mt-1">Welcome back, <?php echo e($currentUser->username); ?>!</p>
-            </div>
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center">
-                    <span class="text-white font-bold text-sm"><?php echo e(strtoupper(substr($currentUser->username, 0, 1))); ?></span>
-                </div>
-            </div>
+        <div>
+            <h2 class="text-2xl font-bold text-white">Home</h2>
+            <p class="text-dark-400 text-sm mt-1">Welcome back, {{ auth()->user()->username }}!</p>
         </div>
     </x-slot>
 
-    <div class="max-w-2xl mx-auto">
+    <div class="w-full max-w-2xl mx-auto">
         {{-- Form untuk Posting Thread Baru --}}
         <div class="bg-dark-800/50 backdrop-blur-sm border border-dark-700/50 rounded-2xl p-6 mb-6 animate-slide-down">
             <form method="POST" action="{{ route('threads.store') }}" enctype="multipart/form-data" class="space-y-4">
@@ -33,7 +25,7 @@
                             name="content"
                             rows="4"
                             class="w-full bg-transparent border-none text-white text-lg placeholder-dark-400 focus:outline-none resize-none"
-                            placeholder="What's happening, <?php echo e($currentUser->username); ?>?"
+                            placeholder="What's happening, {{ auth()->user()->username }}?"
                         ></textarea>
                         @error('content') 
                             <div class="mt-2 text-accent-400 text-sm flex items-center">
@@ -135,7 +127,7 @@
                         </div>
 
                         {{-- Thread Content --}}
-                                <div class="flex-1 min-w-0">
+                            <div class="flex-1 min-w-0">
                             {{-- User Info & Timestamp --}}
                             <div class="flex items-center space-x-2 mb-3">
                                 @php
@@ -143,12 +135,12 @@
                                     $username = $threadUser->username;
                                 @endphp
                                 <a href="{{ route('profile.show', $username) }}" class="font-bold text-white hover:text-primary-400 transition-colors duration-200">
-                                    <?php echo e($username); ?>
+                                    {{ $username }}
                                 </a>
-                                <span class="text-dark-400">@<?php echo e($username); ?></span>
+                                <span class="text-dark-400">@ {{ $username }}</span>
                                 <span class="text-dark-500">•</span>
-                                <time class="text-dark-400 text-sm hover:text-dark-300 transition-colors duration-200" title="<?php echo e($item->created_at->format('M j, Y \a\t g:i A')); ?>">
-                                    <?php echo e($item->created_at->diffForHumans()); ?>
+                                <time class="text-dark-400 text-sm hover:text-dark-300 transition-colors duration-200" title="{{ $item->created_at->format('M j, Y \a\t g:i A') }}">
+                                    {{ $item->created_at->diffForHumans() }}
                                 </time>
                             </div>
 

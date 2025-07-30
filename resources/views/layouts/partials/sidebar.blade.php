@@ -1,5 +1,5 @@
-<aside class="w-72 flex-shrink-0 px-6">
-    <div class="sticky top-0 h-screen flex flex-col py-6">
+<aside class="w-72 px-6 h-full">
+    <div class="sticky top-0 h-full flex flex-col py-6">
         {{-- Logo --}}
         <div class="mb-8">
             <a href="{{ route('dashboard') }}" class="flex items-center group">
@@ -68,7 +68,7 @@
                 <span class="group-hover:translate-x-1 transition-transform duration-200">Profile</span>
             </a>
 
-            {{-- Post Button --}}
+        </nav>
 
         {{-- User Profile Section --}}
         <div class="mt-auto">
@@ -77,17 +77,17 @@
                     {{-- Avatar --}}
                     <div class="flex-shrink-0">
                         <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium group-hover:scale-105 transition-transform duration-200">
-                            <span class="text-white font-bold text-lg"><?php echo e(strtoupper(substr($currentUser->username, 0, 1))); ?></span>
+                            <span class="text-white font-bold text-lg">{{ strtoupper(substr($currentUser->username, 0, 1)) }}</span>
                         </div>
                     </div>
                     {{-- User Info --}}
                     <div class="flex-1 min-w-0">
                         @php $currentUser = auth()->user(); @endphp
                         <p class="font-bold text-white truncate group-hover:text-primary-400 transition-colors duration-200">
-                            <?php echo e($currentUser->username); ?>
+                            {{ $currentUser->username }}
                         </p>
                         <p class="text-sm text-dark-400 truncate">
-                            @<?php echo e($currentUser->username); ?>
+                            @ {{ $currentUser->username }}
                         </p>
                     </div>
                     {{-- More Options --}}
