@@ -21,7 +21,7 @@
         <div class="mt-2 flex items-center space-x-4 text-sm">
             <button
                 type="button"
-                onclick="openPostModal({{ $reply->id }})"
+                onclick="openReplyModal({{ $reply->id }})"
                 class="font-semibold text-gray-400 hover:underline"
             >
                 Balas

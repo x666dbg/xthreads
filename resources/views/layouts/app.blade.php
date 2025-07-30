@@ -12,7 +12,7 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-gradient-to-br from-dark-950 via-dark-900 to-dark-800 text-white overflow-hidden">
+    <body class="font-sans antialiased bg-gradient-to-br from-dark-950 via-dark-900 to-dark-800 text-white">
         <div x-data="{ sidebarOpen: false }">
             <div class="relative max-w-7xl mx-auto flex h-screen">
 
@@ -137,12 +137,7 @@
             </div>
         </div>
 
-        @if (isset($postModal))
-            {{ $postModal }}
-        @else
-            <x-reply-modal />
-        @endif
-
+        <x-reply-modal />
 
         <script>
             function openReplyModal(threadId = null, replyId = null) {
