@@ -11,6 +11,12 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @auth
+        <script>
+            window.currentUser = @json(auth()->user());
+            window.authToken = "{{ auth()->user()->createToken('notifications')->plainTextToken }}";
+        </script>
+        @endauth
     </head>
     <body class="font-sans antialiased bg-gradient-to-br from-dark-950 via-dark-900 to-dark-800 text-white overflow-hidden">
         <div x-data="{ sidebarOpen: false }">

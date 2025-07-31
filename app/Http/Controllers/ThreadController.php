@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Repost;
 use App\Models\Thread;
+use App\Notifications\ThreadReplyNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
@@ -75,7 +76,14 @@ class ThreadController extends Controller
             $validated['image'] = $path;
         }
 
-        $request->user()->threads()->create($validated);
+        $thread = $request->user()->threads()->create($validated);
+
+        if (isset($validated['parent_id']) && $validated['parent_id']) {
+            $parentThread = Thread::find($validated['parent_id']);
+            if ($parentThread && $parentThread->user_id !== $request->user()->id) {
+                $parentThread->user->notify(new ThreadReplyNotification($parentThread, $thread, $request->user()));
+            }
+        }
 
         return back()->with('success', 'Postingan berhasil dibuat!');
     }

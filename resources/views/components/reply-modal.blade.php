@@ -1,9 +1,10 @@
 <div
     x-data="{ show: false, threadId: null }"
-    x-show="show"
-    x-on:open-reply-modal.window="show = true; threadId = $event.detail.threadId; $nextTick(() => $refs.content.focus())"
+    x-on:open-reply-modal.window="if ($event.detail.threadId) { show = true; threadId = $event.detail.threadId; $nextTick(() => $refs.content?.focus()); }"
     x-on:keydown.escape.window="show = false"
+    x-show="show"
     x-cloak
+    style="display: none;"
     class="fixed inset-0 z-50 flex items-center justify-center p-4"
 >
     <div x-show="show" x-transition.opacity class="fixed inset-0 bg-black/70"></div>

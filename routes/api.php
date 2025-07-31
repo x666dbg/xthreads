@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\ThreadController;
 use App\Http\Controllers\Api\LikeController;
 use App\Http\Controllers\Api\RepostController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\NotificationController;
 
 // Public routes (no authentication required)
 Route::prefix('auth')->group(function () {
@@ -54,6 +55,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/{user}/follow', [UserController::class, 'follow']);
         Route::delete('/{user}/follow', [UserController::class, 'unfollow']);
         Route::post('/{user}/toggle-follow', [UserController::class, 'toggleFollow']);
+    });
+
+    // Notification routes
+    Route::prefix('notifications')->group(function () {
+        Route::get('/', [NotificationController::class, 'index']); // Get notifications
+        Route::get('/unread-count', [NotificationController::class, 'unreadCount']); // Get unread count
+        Route::post('/{id}/read', [NotificationController::class, 'markAsRead']); // Mark as read
+        Route::post('/read-all', [NotificationController::class, 'markAllAsRead']); // Mark all as read
     });
 
     // Legacy route for compatibility

@@ -37,12 +37,16 @@
             </a>
 
             {{-- Link Notifications --}}
-            <a href="#" class="flex items-center space-x-4 text-white text-lg font-semibold px-6 py-4 hover:bg-dark-700/50 rounded-2xl transition-all duration-300 group">
+            <a href="{{ route('notifications.index') }}" class="flex items-center space-x-4 text-white text-lg font-semibold px-6 py-4 hover:bg-dark-700/50 rounded-2xl transition-all duration-300 group {{ request()->routeIs('notifications.index') ? 'bg-gradient-to-r from-primary-600/20 to-secondary-600/20 border border-primary-500/30' : '' }}">
                 <div class="w-8 h-8 flex items-center justify-center relative">
                     <svg class="w-6 h-6 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM10.97 4.97a.75.75 0 0 0-1.08 1.05l-3.99 4.99a.75.75 0 0 0 1.08 1.05l3.99-4.99a.75.75 0 0 0 0-1.1zM9.02 8.69a.75.75 0 0 0-1.06 1.06l2.03 2.03a.75.75 0 0 0 1.06-1.06L9.02 8.69z"></path>
                     </svg>
-                    <div class="absolute -top-1 -right-1 w-3 h-3 bg-accent-500 rounded-full animate-pulse"></div>
+                    @if(auth()->user()->unreadNotifications->count() > 0)
+                        <div class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold animate-pulse min-w-5">
+                            {{ auth()->user()->unreadNotifications->count() }}
+                        </div>
+                    @endif
                 </div>
                 <span class="group-hover:translate-x-1 transition-transform duration-200">Notifications</span>
             </a>
