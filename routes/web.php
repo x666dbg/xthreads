@@ -33,6 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::post('/users/{user}/ban', [UserProfileController::class, 'ban'])->name('users.ban');
+    Route::post('/users/{user}/unban', [UserProfileController::class, 'unban'])->name('users.unban');
 
     Route::get('/{user:username}', [UserProfileController::class, 'show'])->name('profile.show');
     Route::post('/{user:username}/follow', [UserProfileController::class, 'follow'])->name('profile.follow');

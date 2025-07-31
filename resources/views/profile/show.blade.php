@@ -39,6 +39,27 @@
                     {{-- Follow/Unfollow Button --}}
                     @if (auth()->user()->isNot($user))
                         <div class="mt-16">
+                            @can('ban', $user)
+                                @if(!$user->is_banned)
+                                    <form action="{{ route('users.ban', $user) }}" method="POST" class="mt-2">
+                                        @csrf
+                                        <button type="submit" class="w-full px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-full font-semibold transition-all duration-300 hover:scale-105">
+                                            Ban User
+                                        </button>
+                                    </form>
+                                @endif
+                            @endcan
+
+                            @can('unban', $user)
+                                @if($user->is_banned)
+                                    <form action="{{ route('users.unban', $user) }}" method="POST" class="mt-2">
+                                        @csrf
+                                        <button type="submit" class="w-full px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-full font-semibold transition-all duration-300 hover:scale-105">
+                                            Unban User
+                                        </button>
+                                    </form>
+                                @endif
+                            @endcan
                             @if (auth()->user()->following->contains($user))
                                 <form action="{{ route('profile.unfollow', $user->username) }}" method="POST">
                                     @csrf

@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request; // <-- Pastikan ini ada
+use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Gate;
 
 class UserProfileController extends Controller
 {
@@ -61,5 +62,23 @@ class UserProfileController extends Controller
         // Ganti auth()->user() menjadi request()->user()
         $request->user()->following()->detach($user);
         return back()->with('success', 'Berhasil berhenti mengikuti @' . $user->username);
+    }
+
+    public function ban(Request $request, User $user): RedirectResponse
+    {
+        Gate::authorize('ban', $user);
+
+        $user->update(['is_banned' => true]);
+
+        return back()->with('success', 'Berhasil mem-ban @' . $user->username);
+    }
+
+    public function unban(Request $request, User $user): RedirectResponse
+    {
+        Gate::authorize('unban', $user);
+
+        $user->update(['is_banned' => false]);
+
+        return back()->with('success', 'Berhasil melakukan unban pada @' . $user->username);
     }
 }
