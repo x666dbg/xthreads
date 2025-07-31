@@ -20,12 +20,12 @@ require __DIR__.'/auth.php';
 Route::middleware('auth')->group(function () {
     Route::post('/threads', [ThreadController::class, 'store'])->name('threads.store');
     Route::get('/threads/{thread}', [ThreadController::class, 'show'])->name('threads.show');
+    Route::delete('/threads/{thread}', [ThreadController::class, 'destroy'])->name('threads.destroy');
 
     Route::post('/threads/{thread}/like', [LikeController::class, 'likeThread'])->name('threads.like');
     Route::delete('/threads/{thread}/unlike', [LikeController::class, 'unlikeThread'])->name('threads.unlike');
     Route::post('/replies/{reply}/like', [LikeController::class, 'likeReply'])->name('replies.like');
     Route::delete('/replies/{reply}/unlike', [LikeController::class, 'unlikeReply'])->name('replies.unlike');
-
     Route::post('/threads/{thread}/repost', [RepostController::class, 'store'])->name('threads.repost');
     Route::delete('/threads/{thread}/repost', [RepostController::class, 'destroy'])->name('threads.repost.destroy');
 

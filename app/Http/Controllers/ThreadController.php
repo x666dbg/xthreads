@@ -8,9 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ThreadController extends Controller
 {
+    use AuthorizesRequests;
     public function index(Request $request)
     {
         $threadRelationships = ['user', 'likes', 'repostedBy', 'children', 'parent.user'];
@@ -59,7 +61,7 @@ class ThreadController extends Controller
     {
         $validated = $request->validate([
             'content' => 'required|string|max:280',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
             'parent_id' => 'nullable|exists:threads,id',
         ]);
 
@@ -91,5 +93,14 @@ class ThreadController extends Controller
         return view('threads.show', [
             'thread' => $thread
         ]);
+    }
+
+    public function destroy(Thread $thread)
+    {
+        $this->authorize('delete', $thread);
+
+        $thread->delete();
+
+        return back()->with('success', 'Thread berhasil dihapus!');
     }
 }
