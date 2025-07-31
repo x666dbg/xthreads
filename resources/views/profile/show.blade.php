@@ -68,11 +68,13 @@
                 {{-- User Details --}}
                 <div class="space-y-3">
                     <div>
-                        <h1 class="text-3xl font-bold text-white"><?php echo e($user->username); ?></h1>
-                        @php
-                            $username = $user->username;
-                        @endphp
-                        <p class="text-dark-400">@<?php echo e($username); ?></p>
+                        <div class="flex items-center">
+                            <h1 class="text-3xl font-bold text-white">{{ $user->username }}</h1>
+                            @if ($user->isModerator())
+                                <x-moderator-badge />
+                            @endif
+                        </div>
+                        <p class="text-dark-400">@ {{ $user->username }}</p>
                     </div>
 
                     <p class="text-white text-lg">

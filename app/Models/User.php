@@ -24,6 +24,7 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -55,7 +56,6 @@ class User extends Authenticatable
     }
 
 
-
     public function following()
     {
         return $this->belongsToMany(User::class, 'followers', 'user_id', 'following_user_id');
@@ -65,9 +65,13 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(User::class, 'followers', 'following_user_id', 'user_id');
     }
-
     public function reposts()
     {
         return $this->belongsToMany(Thread::class, 'reposts', 'user_id', 'thread_id')->withTimestamps();
+    }
+
+    public function isModerator(): bool
+    {
+        return $this->role === 'moderator';
     }
 }

@@ -45,7 +45,7 @@ class ThreadPolicy
      */
     public function delete(User $user, Thread $thread): bool
     {
-        return $user->id === $thread->user_id;
+        return $user->isModerator() || $user->id === $thread->user_id;
     }
 
     /**

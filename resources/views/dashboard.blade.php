@@ -102,6 +102,10 @@
         {{-- Timeline Threads --}}
         <div class="space-y-6">
             @foreach ($timeline as $item)
+                @php
+                    $thread = $item->original_thread;
+                    $user = $thread->user;
+                @endphp
                 <article class="bg-dark-800/50 backdrop-blur-sm border border-dark-700/50 rounded-2xl p-6 hover:bg-dark-700/30 transition-all duration-300 animate-slide-up">
                     {{-- Repost Indicator --}}
                     @if ($item->is_repost)
@@ -127,23 +131,23 @@
                         </div>
 
                         {{-- Thread Content --}}
-                            <div class="flex-1 min-w-0">
+                        <div class="flex-1 min-w-0">
                             {{-- User Info & Timestamp --}}
                             <div class="flex items-center space-x-2 mb-3">
-                                @php
-                                    $threadUser = $item->original_thread->user;
-                                    $username = $threadUser->username;
-                                @endphp
-                                <a href="{{ route('profile.show', $username) }}" class="font-bold text-white hover:text-primary-400 transition-colors duration-200">
-                                    {{ $username }}
+                                <a href="{{ route('profile.show', $user->username) }}" class="font-bold text-white hover:text-primary-400 transition-colors duration-200 flex items-center">
+                                   <span>{{ $user->username }}</span>
                                 </a>
-                                <span class="text-dark-400">@ {{ $username }}</span>
+                                @if ($user->isModerator())
+                                    <x-moderator-badge />
+                                @endif
+                                <span class="text-dark-400">@ {{ $user->username }}</span>
                                 <span class="text-dark-500">•</span>
-                                <time class="text-dark-400 text-sm hover:text-dark-300 transition-colors duration-200" title="{{ $item->created_at->format('M j, Y \a\t g:i A') }}">
-                                    {{ $item->created_at->diffForHumans() }}
-                                </time>
+                                <a href="{{ route('threads.show', $thread) }}">
+                                    <time class="text-dark-400 text-sm hover:text-dark-300 transition-colors duration-200" title="{{ $item->created_at->format('M j, Y \a\t g:i A') }}">
+                                        {{ $item->created_at->diffForHumans() }}
+                                    </time>
+                                </a>
                             </div>
-
 
                             {{-- Thread Content --}}
                             <a href="{{ route('threads.show', $item->original_thread) }}" class="block group">
