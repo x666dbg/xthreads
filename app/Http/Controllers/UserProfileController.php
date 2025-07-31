@@ -52,8 +52,19 @@ class UserProfileController extends Controller
 
     public function follow(Request $request, User $user): RedirectResponse // <-- Tambahkan Request
     {
-        // Ganti auth()->user() menjadi request()->user()
-        $request->user()->following()->attach($user);
+        $currentUser = $request->user();
+        
+        if ($currentUser->id === $user->id) {
+            return back()->with('error', 'You cannot follow yourself');
+        }
+        
+        if (!$currentUser->following->contains($user)) {
+            $currentUser->following()->attach($user);
+            
+            // Send notification to the followed user
+            $user->notify(new \App\Notifications\NewFollowerNotification($currentUser));
+        }
+        
         return back()->with('success', 'Berhasil mengikuti @' . $user->username);
     }
 

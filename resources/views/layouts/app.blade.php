@@ -22,14 +22,14 @@
         @endauth
     </head>
     <body class="font-sans antialiased bg-gradient-to-br from-dark-950 via-dark-900 to-dark-800 text-white overflow-hidden lg:overflow-hidden">
-        <div x-data="{ sidebarOpen: false }">
+        <div x-data="{ sidebarOpen: false }" x-init="sidebarOpen = false">
             <div class="relative max-w-7xl mx-auto flex h-screen">
 
                 <div class="hidden lg:block">
                     @include('layouts.partials.sidebar')
                 </div>
 
-                <div x-show="sidebarOpen" class="fixed inset-0 flex z-40 lg:hidden" x-cloak>
+                <div x-show="sidebarOpen" class="fixed inset-0 flex z-40 lg:hidden" x-cloak style="display: none;">
                     <div @click="sidebarOpen = false" x-show="sidebarOpen"
                          x-transition:enter="transition-opacity ease-linear duration-300"
                          x-transition:enter-start="opacity-0"
@@ -70,7 +70,7 @@
                                 </div>
                             @else
                                 <div class="lg:hidden absolute left-4 top-1/2 -translate-y-1/2">
-                                    <button onclick="history.back()" class="p-2 hover:bg-dark-700/50 rounded-full transition-all duration-200 focus:outline-none">
+                                    <button onclick="closeSidebarAndBack()" class="p-2 hover:bg-dark-700/50 rounded-full transition-all duration-200 focus:outline-none">
                                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                                         </svg>
@@ -173,6 +173,27 @@
                     }
                 }));
             }
+            
+            function closeSidebarAndBack() {
+                // Force close sidebar immediately without animation on back navigation
+                const app = document.querySelector('[x-data*="sidebarOpen"]');
+                if (app && app._x_dataStack && app._x_dataStack[0]) {
+                    app._x_dataStack[0].sidebarOpen = false;
+                }
+                
+                // Use a very short delay to ensure state is set, then navigate
+                setTimeout(() => {
+                    history.back();
+                }, 10);
+            }
+            
+            // Ensure sidebar is always closed on page load/refresh
+            document.addEventListener('DOMContentLoaded', function() {
+                const app = document.querySelector('[x-data*="sidebarOpen"]');
+                if (app && app._x_dataStack && app._x_dataStack[0]) {
+                    app._x_dataStack[0].sidebarOpen = false;
+                }
+            });
         </script>
 
     </body>
