@@ -5,15 +5,6 @@
     display: none !important; 
 }
 
-/* Ensure sidebar is hidden by default */
-.sidebar-overlay {
-    display: none;
-}
-
-.sidebar-overlay.show {
-    display: flex;
-}
-
 /* Touch targets - minimum 44px for mobile */
 @media (max-width: 640px) {
     /* Ensure buttons are large enough for touch */
