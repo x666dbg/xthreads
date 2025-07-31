@@ -66,66 +66,66 @@
                     </div>
                 </main>
 
-                <aside class="w-80 px-6 py-4 hidden lg:block">
-                    <div class="sticky top-4 space-y-6">
-                        <div class="bg-dark-800/50 backdrop-blur-sm rounded-2xl p-4 border border-dark-700/50">
+                <aside class="w-80 px-6 py-3 hidden lg:block">
+                    <div class="sticky top-4 space-y-4">
+                        <div class="bg-dark-800/50 backdrop-blur-sm rounded-xl p-3 border border-dark-700/50">
                             <div class="relative">
-                                <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-dark-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-dark-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                 </svg>
-                                <input type="text" placeholder="Search X-Threads..." class="w-full pl-10 pr-4 py-3 bg-dark-700/50 border border-dark-600/50 rounded-xl text-white placeholder-dark-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200">
+                                <input type="text" placeholder="Search X-Threads..." class="w-full pl-9 pr-3 py-2 bg-dark-700/50 border border-dark-600/50 rounded-lg text-sm text-white placeholder-dark-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200">
                             </div>
                         </div>
 
-                        <div class="bg-dark-800/50 backdrop-blur-sm rounded-2xl p-6 border border-dark-700/50">
-                            <h3 class="text-xl font-bold text-white mb-4">Trending</h3>
+                        <div class="bg-dark-800/50 backdrop-blur-sm rounded-xl p-4 border border-dark-700/50">
+                            <h3 class="text-lg font-bold text-white mb-3">Trending</h3>
+                            <div class="space-y-2">
+                                <div class="hover:bg-dark-700/30 p-2 rounded-lg cursor-pointer transition-all duration-200">
+                                    <p class="text-dark-400 text-xs">Trending in Technology</p>
+                                    <p class="text-white font-semibold text-sm">#Laravel</p>
+                                    <p class="text-dark-400 text-xs">12.5K Threads</p>
+                                </div>
+                                <div class="hover:bg-dark-700/30 p-2 rounded-lg cursor-pointer transition-all duration-200">
+                                    <p class="text-dark-400 text-xs">Trending</p>
+                                    <p class="text-white font-semibold text-sm">#WebDevelopment</p>
+                                    <p class="text-dark-400 text-xs">8.2K Threads</p>
+                                </div>
+                                <div class="hover:bg-dark-700/30 p-2 rounded-lg cursor-pointer transition-all duration-200">
+                                    <p class="text-dark-400 text-xs">Trending in Design</p>
+                                    <p class="text-white font-semibold text-sm">#UI/UX</p>
+                                    <p class="text-dark-400 text-xs">5.8K Threads</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-dark-800/50 backdrop-blur-sm rounded-xl p-4 border border-dark-700/50">
+                            <h3 class="text-lg font-bold text-white mb-3">Who to follow</h3>
                             <div class="space-y-3">
-                                <div class="hover:bg-dark-700/30 p-3 rounded-xl cursor-pointer transition-all duration-200">
-                                    <p class="text-dark-400 text-sm">Trending in Technology</p>
-                                    <p class="text-white font-semibold">#Laravel</p>
-                                    <p class="text-dark-400 text-sm">12.5K Threads</p>
-                                </div>
-                                <div class="hover:bg-dark-700/30 p-3 rounded-xl cursor-pointer transition-all duration-200">
-                                    <p class="text-dark-400 text-sm">Trending</p>
-                                    <p class="text-white font-semibold">#WebDevelopment</p>
-                                    <p class="text-dark-400 text-sm">8.2K Threads</p>
-                                </div>
-                                <div class="hover:bg-dark-700/30 p-3 rounded-xl cursor-pointer transition-all duration-200">
-                                    <p class="text-dark-400 text-sm">Trending in Design</p>
-                                    <p class="text-white font-semibold">#UI/UX</p>
-                                    <p class="text-dark-400 text-sm">5.8K Threads</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bg-dark-800/50 backdrop-blur-sm rounded-2xl p-6 border border-dark-700/50">
-                            <h3 class="text-xl font-bold text-white mb-4">Who to follow</h3>
-                            <div class="space-y-4">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center">
-                                            <span class="text-white font-semibold text-sm">JD</span>
+                                        <div class="w-9 h-9 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                            <span class="text-white font-semibold text-xs">JD</span>
                                         </div>
                                         <div>
-                                            <p class="text-white font-semibold">John Doe</p>
-                                            <p class="text-dark-400 text-sm">@johndoe</p>
+                                            <p class="text-white font-semibold text-sm">John Doe</p>
+                                            <p class="text-dark-400 text-xs">@johndoe</p>
                                         </div>
                                     </div>
-                                    <button class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-full text-sm font-semibold transition-all duration-200 hover:scale-105">
+                                    <button class="px-3 py-1.5 bg-primary-600 hover:bg-primary-700 text-white rounded-full text-xs font-semibold transition-all duration-200 hover:scale-105 flex-shrink-0">
                                         Follow
                                     </button>
                                 </div>
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-gradient-to-br from-accent-500 to-secondary-500 rounded-full flex items-center justify-center">
-                                            <span class="text-white font-semibold text-sm">JS</span>
+                                        <div class="w-9 h-9 bg-gradient-to-br from-accent-500 to-secondary-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                            <span class="text-white font-semibold text-xs">JS</span>
                                         </div>
                                         <div>
-                                            <p class="text-white font-semibold">Jane Smith</p>
-                                            <p class="text-dark-400 text-sm">@janesmith</p>
+                                            <p class="text-white font-semibold text-sm">Jane Smith</p>
+                                            <p class="text-dark-400 text-xs">@janesmith</p>
                                         </div>
                                     </div>
-                                    <button class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-full text-sm font-semibold transition-all duration-200 hover:scale-105">
+                                    <button class="px-3 py-1.5 bg-primary-600 hover:bg-primary-700 text-white rounded-full text-xs font-semibold transition-all duration-200 hover:scale-105 flex-shrink-0">
                                         Follow
                                     </button>
                                 </div>
