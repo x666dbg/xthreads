@@ -80,9 +80,15 @@
                 <div class="flex items-center space-x-3">
                     {{-- Avatar --}}
                     <div class="flex-shrink-0">
-                        <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium group-hover:scale-105 transition-transform duration-200">
-                            <span class="text-white font-bold text-lg">{{ strtoupper(substr($currentUser->username, 0, 1)) }}</span>
-                        </div>
+                        @if($currentUser->photo)
+                            <img src="{{ asset('storage/' . $currentUser->photo) }}" 
+                                 alt="{{ $currentUser->username }}" 
+                                 class="w-12 h-12 rounded-full object-cover shadow-medium group-hover:scale-105 transition-transform duration-200">
+                        @else
+                            <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium group-hover:scale-105 transition-transform duration-200">
+                                <span class="text-white font-bold text-lg">{{ strtoupper(substr($currentUser->username, 0, 1)) }}</span>
+                            </div>
+                        @endif
                     </div>
                     {{-- User Info --}}
                     <div class="flex-1 min-w-0">

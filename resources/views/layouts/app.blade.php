@@ -53,9 +53,15 @@
                         <div class="relative flex items-center justify-center lg:justify-start h-16 px-4 sm:px-6 lg:px-8">
                             <div class="lg:hidden absolute left-4 top-1/2 -translate-y-1/2">
                                 <button @click.prevent="sidebarOpen = true" class="focus:outline-none">
-                                    <div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium">
-                                        <span class="text-white font-bold text-xs">{{ strtoupper(substr(auth()->user()->username, 0, 1)) }}</span>
-                                    </div>
+                                    @if(auth()->user()->photo)
+                                        <img src="{{ asset('storage/' . auth()->user()->photo) }}" 
+                                             alt="{{ auth()->user()->username }}" 
+                                             class="w-8 h-8 rounded-full object-cover shadow-medium">
+                                    @else
+                                        <div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium">
+                                            <span class="text-white font-bold text-xs">{{ strtoupper(substr(auth()->user()->username, 0, 1)) }}</span>
+                                        </div>
+                                    @endif
                                 </button>
                             </div>
 

@@ -95,6 +95,11 @@ class RepostController extends Controller
             $user->reposts()->attach($thread);
             $action = 'reposted';
             $isReposted = true;
+            
+            // Send notification when reposting
+            if ($thread->user_id !== $user->id) {
+                $thread->user->notify(new \App\Notifications\ThreadRepostNotification($thread, $user));
+            }
         }
 
         return response()->json([

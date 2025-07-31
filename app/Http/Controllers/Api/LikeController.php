@@ -79,6 +79,11 @@ class LikeController extends Controller
             $thread->like($user);
             $action = 'liked';
             $isLiked = true;
+            
+            // Send notification only when liking (not unliking) and not own thread
+            if ($thread->user_id !== $user->id) {
+                $thread->user->notify(new \App\Notifications\ThreadLikedNotification($thread, $user));
+            }
         }
 
         return response()->json([

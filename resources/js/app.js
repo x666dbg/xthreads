@@ -1,4 +1,5 @@
 import './bootstrap';
+import './thread-interactions';
 
 import Alpine from 'alpinejs';
 

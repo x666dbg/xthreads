@@ -14,9 +14,15 @@
                 <div class="flex items-start space-x-4">
                     {{-- User Avatar --}}
                     <div class="flex-shrink-0">
-                        <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium">
-                            <span class="text-white font-bold text-lg">{{ strtoupper(substr(auth()->user()->username, 0, 1)) }}</span>
-                        </div>
+                        @if(auth()->user()->photo)
+                            <img src="{{ asset('storage/' . auth()->user()->photo) }}" 
+                                 alt="{{ auth()->user()->username }}" 
+                                 class="w-12 h-12 rounded-full object-cover shadow-medium">
+                        @else
+                            <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium">
+                                <span class="text-white font-bold text-lg">{{ strtoupper(substr(auth()->user()->username, 0, 1)) }}</span>
+                            </div>
+                        @endif
                     </div>
                     
                     {{-- Content Input --}}
@@ -120,13 +126,19 @@
                         </div>
                     @endif
 
-                    <div class="flex space-x-4">
+                    <div class="flex space-x-4" data-thread-id="{{ $item->original_thread->id }}">
                         {{-- User Avatar --}}
                         <div class="flex-shrink-0">
                             <a href="{{ route('profile.show', $item->original_thread->user->username) }}" class="block group">
-                                <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium group-hover:scale-105 transition-transform duration-200">
-                                    <span class="text-white font-bold text-lg">{{ strtoupper(substr($item->original_thread->user->username, 0, 1)) }}</span>
-                                </div>
+                                @if($item->original_thread->user->photo)
+                                    <img src="{{ asset('storage/' . $item->original_thread->user->photo) }}" 
+                                         alt="{{ $item->original_thread->user->username }}" 
+                                         class="w-12 h-12 rounded-full object-cover shadow-medium group-hover:scale-105 transition-transform duration-200">
+                                @else
+                                    <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium group-hover:scale-105 transition-transform duration-200">
+                                        <span class="text-white font-bold text-lg">{{ strtoupper(substr($item->original_thread->user->username, 0, 1)) }}</span>
+                                    </div>
+                                @endif
                             </a>
                         </div>
 

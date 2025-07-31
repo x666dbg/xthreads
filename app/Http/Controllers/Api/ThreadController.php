@@ -106,6 +106,14 @@ class ThreadController extends Controller
         $thread = Thread::create($threadData);
         $thread->load(['user', 'likes', 'repostedBy', 'children']);
 
+        // Send notification for reply
+        if (isset($threadData['parent_id']) && $threadData['parent_id']) {
+            $parentThread = Thread::find($threadData['parent_id']);
+            if ($parentThread && $parentThread->user_id !== $request->user()->id) {
+                $parentThread->user->notify(new \App\Notifications\ThreadReplyNotification($parentThread, $thread, $request->user()));
+            }
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Thread created successfully',

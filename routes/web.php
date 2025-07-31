@@ -37,6 +37,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    Route::get('/profile/edit-full', [ProfileController::class, 'editFull'])->name('profile.edit-full');
+    Route::post('/profile/update-full', [ProfileController::class, 'updateFull'])->name('profile.update-full');
 
     Route::post('/users/{user}/ban', [UserProfileController::class, 'ban'])->name('users.ban');
     Route::post('/users/{user}/unban', [UserProfileController::class, 'unban'])->name('users.unban');

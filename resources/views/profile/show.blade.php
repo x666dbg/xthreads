@@ -18,6 +18,11 @@
         <div class="bg-dark-800/50 backdrop-blur-sm border border-dark-700/50 rounded-2xl overflow-hidden mb-6 animate-slide-down">
             {{-- Cover Image --}}
             <div class="h-48 bg-gradient-to-br from-primary-600 via-secondary-600 to-accent-600 relative">
+                @if($user->cover_photo)
+                    <img src="{{ asset('storage/' . $user->cover_photo) }}" 
+                         alt="{{ $user->username }} cover" 
+                         class="w-full h-full object-cover">
+                @endif
                 <div class="absolute inset-0 bg-gradient-to-t from-dark-900/50 to-transparent"></div>
             </div>
 
@@ -26,9 +31,15 @@
                 {{-- Avatar --}}
                 <div class="flex justify-between items-start -mt-16 mb-4">
                     <div class="relative">
-                        <div class="w-32 h-32 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-large border-4 border-dark-800">
-                            <span class="text-white font-bold text-4xl">{{ strtoupper(substr($user->username, 0, 1)) }}</span>
-                        </div>
+                        @if($user->photo)
+                            <img src="{{ asset('storage/' . $user->photo) }}" 
+                                 alt="{{ $user->username }}" 
+                                 class="w-32 h-32 rounded-full object-cover shadow-large border-4 border-dark-800">
+                        @else
+                            <div class="w-32 h-32 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-large border-4 border-dark-800">
+                                <span class="text-white font-bold text-4xl">{{ strtoupper(substr($user->username, 0, 1)) }}</span>
+                            </div>
+                        @endif
                         <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-accent-500 rounded-full border-4 border-dark-800 flex items-center justify-center">
                             <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
@@ -79,9 +90,9 @@
                         </div>
                     @else
                         <div class="mt-16">
-                            <button class="px-6 py-2 bg-dark-700 hover:bg-dark-600 text-white border border-dark-600 rounded-full font-semibold transition-all duration-300">
+                            <a href="{{ route('profile.edit-full') }}" class="px-6 py-2 bg-dark-700 hover:bg-dark-600 text-white border border-dark-600 rounded-full font-semibold transition-all duration-300 inline-block">
                                 Edit Profile
-                            </button>
+                            </a>
                         </div>
                     @endif
                 </div>
@@ -98,18 +109,22 @@
                         <p class="text-dark-400">@ {{ $user->username }}</p>
                     </div>
 
-                    <p class="text-white text-lg">
-                        🚀 Building amazing things with code • Laravel enthusiast • Coffee lover ☕
-                    </p>
+                    @if($user->bio)
+                        <p class="text-white text-lg">
+                            {{ $user->bio }}
+                        </p>
+                    @endif
 
                     <div class="flex items-center space-x-4 text-dark-400">
-                        <div class="flex items-center space-x-1">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            </svg>
-                            <span>Indonesia</span>
-                        </div>
+                        @if($user->location)
+                            <div class="flex items-center space-x-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                <span>{{ $user->location }}</span>
+                            </div>
+                        @endif
                         <div class="flex items-center space-x-1">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h3a1 1 0 011 1v8a1 1 0 01-1 1H5a1 1 0 01-1-1V8a1 1 0 011-1h3z"></path>
