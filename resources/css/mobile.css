@@ -1,0 +1,104 @@
+/* Mobile Responsive Styles */
+
+/* Touch targets - minimum 44px for mobile */
+@media (max-width: 640px) {
+    /* Ensure buttons are large enough for touch */
+    button, a[role="button"] {
+        min-height: 44px;
+        padding: 12px 16px;
+    }
+    
+    /* Form elements */
+    input, textarea, select {
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 12px 16px;
+    }
+    
+    /* Prevent horizontal scroll */
+    body {
+        overflow-x: hidden;
+    }
+    
+    /* Better text readability */
+    p, span, div {
+        line-height: 1.6;
+    }
+    
+    /* Adjust spacing for mobile */
+    .space-x-4 > * + * {
+        margin-left: 0.75rem;
+    }
+    
+    .space-y-6 > * + * {
+        margin-top: 1rem;
+    }
+}
+
+/* iPhone specific fixes */
+@supports (-webkit-touch-callout: none) {
+    /* iOS Safari viewport fix */
+    .h-screen {
+        height: -webkit-fill-available;
+    }
+    
+    /* Better scrolling on iOS */
+    .overflow-y-auto {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Android specific optimizations */
+@media screen and (max-width: 640px) and (orientation: portrait) {
+    /* Better touch targets for Android */
+    .hover\:scale-105:hover {
+        transform: none; /* Disable hover effects on mobile */
+    }
+    
+    /* Optimize font rendering */
+    * {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+/* Safe area adjustments for phones with notches */
+@supports (padding: max(0px)) {
+    .safe-top {
+        padding-top: max(1rem, env(safe-area-inset-top));
+    }
+    
+    .safe-bottom {
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+    
+    .safe-left {
+        padding-left: max(1rem, env(safe-area-inset-left));
+    }
+    
+    .safe-right {
+        padding-right: max(1rem, env(safe-area-inset-right));
+    }
+}
+
+/* Performance optimizations for mobile */
+@media (max-width: 640px) {
+    /* Reduce animations on mobile for better performance */
+    .animate-pulse {
+        animation-duration: 1s;
+    }
+    
+    /* Optimize transforms */
+    .transform {
+        will-change: transform;
+    }
+    
+    /* Better scrolling performance */
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}

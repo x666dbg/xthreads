@@ -5,20 +5,20 @@
     x-show="show"
     x-cloak
     style="display: none;"
-    class="fixed inset-0 z-50 flex items-center justify-center p-4"
+    class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4"
 >
     <div x-show="show" x-transition.opacity class="fixed inset-0 bg-black/70"></div>
     <div
         x-show="show"
         x-transition
         @click.outside="show = false"
-        class="relative w-full max-w-xl overflow-hidden rounded-lg bg-gray-800 shadow-xl"
+        class="relative w-full max-w-xl overflow-hidden rounded-lg bg-gray-800 shadow-xl mx-2 sm:mx-0"
     >
-        <div class="border-b border-gray-700 p-4">
-            <h3 class="text-lg font-semibold">Balas Thread</h3>
+        <div class="border-b border-gray-700 p-3 sm:p-4">
+            <h3 class="text-base sm:text-lg font-semibold">Balas Thread</h3>
         </div>
         
-        <form action="{{ route('threads.store') }}" method="POST" class="p-4">
+        <form action="{{ route('threads.store') }}" method="POST" class="p-3 sm:p-4">
             @csrf
             <input type="hidden" name="parent_id" :value="threadId">
 
@@ -30,7 +30,7 @@
                 placeholder="Tulis balasanmu..."
                 required
             ></textarea>
-            <div class="mt-4 flex justify-end space-x-2">
+            <div class="mt-3 sm:mt-4 flex justify-end space-x-2">
                 <x-secondary-button type="button" @click.prevent="show = false">Batal</x-secondary-button>
                 <x-primary-button type="submit">Balas</x-primary-button>
             </div>

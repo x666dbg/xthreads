@@ -8,19 +8,19 @@
 
     <div class="w-full max-w-2xl mx-auto">
         {{-- Form untuk Posting Thread Baru --}}
-        <div class="bg-dark-800/50 backdrop-blur-sm border border-dark-700/50 rounded-2xl p-6 mb-6 animate-slide-down">
+        <div class="bg-dark-800/50 backdrop-blur-sm border border-dark-700/50 rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 animate-slide-down">
             <form method="POST" action="{{ route('threads.store') }}" enctype="multipart/form-data" class="space-y-4">
                 @csrf
-                <div class="flex items-start space-x-4">
+                <div class="flex items-start space-x-3 sm:space-x-4">
                     {{-- User Avatar --}}
                     <div class="flex-shrink-0">
                         @if(auth()->user()->photo)
                             <img src="{{ asset('storage/' . auth()->user()->photo) }}" 
                                  alt="{{ auth()->user()->username }}" 
-                                 class="w-12 h-12 rounded-full object-cover shadow-medium">
+                                 class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover shadow-medium">
                         @else
-                            <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium">
-                                <span class="text-white font-bold text-lg">{{ strtoupper(substr(auth()->user()->username, 0, 1)) }}</span>
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium">
+                                <span class="text-white font-bold text-sm sm:text-lg">{{ strtoupper(substr(auth()->user()->username, 0, 1)) }}</span>
                             </div>
                         @endif
                     </div>
@@ -75,8 +75,8 @@
                 </div>
 
                 {{-- Action Bar --}}
-                <div class="ml-16 flex items-center justify-between pt-4 border-t border-dark-700/50">
-                    <div class="flex items-center space-x-4">
+                <div class="ml-10 sm:ml-16 flex items-center justify-between pt-4 border-t border-dark-700/50">
+                    <div class="flex items-center space-x-2 sm:space-x-4">
                         {{-- Image Upload Button --}}
                         <button type="button" onclick="document.getElementById('image').click()" class="p-2 hover:bg-primary-600/20 rounded-full transition-all duration-200 group">
                             <svg class="w-5 h-5 text-primary-400 group-hover:text-primary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -98,7 +98,7 @@
                     </div>
                     
                     {{-- Post Button --}}
-                    <button type="submit" class="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white font-bold py-2 px-6 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-colored disabled:opacity-50 disabled:cursor-not-allowed">
+                    <button type="submit" class="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white font-bold py-2 px-4 sm:px-6 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-colored disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base">
                         Post
                     </button>
                 </div>
@@ -106,13 +106,13 @@
         </div>
 
         {{-- Timeline Threads --}}
-        <div class="space-y-6">
+        <div class="space-y-4 sm:space-y-6">
             @foreach ($timeline as $item)
                 @php
                     $thread = $item->original_thread;
                     $user = $thread->user;
                 @endphp
-                <article class="bg-dark-800/50 backdrop-blur-sm border border-dark-700/50 rounded-2xl p-6 hover:bg-dark-700/30 transition-all duration-300 animate-slide-up">
+                <article class="bg-dark-800/50 backdrop-blur-sm border border-dark-700/50 rounded-2xl p-4 sm:p-6 hover:bg-dark-700/30 transition-all duration-300 animate-slide-up">
                     {{-- Repost Indicator --}}
                     @if ($item->is_repost)
                         <div class="mb-4 flex items-center text-dark-400 text-sm">
@@ -126,17 +126,17 @@
                         </div>
                     @endif
 
-                    <div class="flex space-x-4" data-thread-id="{{ $item->original_thread->id }}">
+                    <div class="flex space-x-3 sm:space-x-4" data-thread-id="{{ $item->original_thread->id }}">
                         {{-- User Avatar --}}
                         <div class="flex-shrink-0">
                             <a href="{{ route('profile.show', $item->original_thread->user->username) }}" class="block group">
                                 @if($item->original_thread->user->photo)
                                     <img src="{{ asset('storage/' . $item->original_thread->user->photo) }}" 
                                          alt="{{ $item->original_thread->user->username }}" 
-                                         class="w-12 h-12 rounded-full object-cover shadow-medium group-hover:scale-105 transition-transform duration-200">
+                                         class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover shadow-medium group-hover:scale-105 transition-transform duration-200">
                                 @else
-                                    <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium group-hover:scale-105 transition-transform duration-200">
-                                        <span class="text-white font-bold text-lg">{{ strtoupper(substr($item->original_thread->user->username, 0, 1)) }}</span>
+                                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium group-hover:scale-105 transition-transform duration-200">
+                                        <span class="text-white font-bold text-sm sm:text-lg">{{ strtoupper(substr($item->original_thread->user->username, 0, 1)) }}</span>
                                     </div>
                                 @endif
                             </a>
@@ -145,15 +145,15 @@
                         {{-- Thread Content --}}
                         <div class="flex-1 min-w-0">
                             {{-- User Info & Timestamp --}}
-                            <div class="flex items-center space-x-2 mb-3">
+                            <div class="flex items-center space-x-1 sm:space-x-2 mb-3 flex-wrap">
                                 <a href="{{ route('profile.show', $user->username) }}" class="font-bold text-white hover:text-primary-400 transition-colors duration-200 flex items-center">
                                    <span>{{ $user->username }}</span>
                                 </a>
                                 @if ($user->isModerator())
                                     <x-moderator-badge />
                                 @endif
-                                <span class="text-dark-400">@ {{ $user->username }}</span>
-                                <span class="text-dark-500">•</span>
+                                <span class="text-dark-400 text-sm">@ {{ $user->username }}</span>
+                                <span class="text-dark-500 hidden sm:inline">•</span>
                                 <a href="{{ route('threads.show', $thread) }}">
                                     <time class="text-dark-400 text-sm hover:text-dark-300 transition-colors duration-200" title="{{ $item->created_at->format('M j, Y \a\t g:i A') }}">
                                         {{ $item->created_at->diffForHumans() }}
@@ -163,13 +163,13 @@
 
                             {{-- Thread Content --}}
                             <a href="{{ route('threads.show', $item->original_thread) }}" class="block group">
-                                <p class="text-white text-lg leading-relaxed mb-4 group-hover:text-gray-100 transition-colors duration-200">
+                                <p class="text-white text-base sm:text-lg leading-relaxed mb-3 sm:mb-4 group-hover:text-gray-100 transition-colors duration-200">
                                     {{ $item->original_thread->content }}
                                 </p>
 
                                 {{-- Thread Image --}}
                                 @if ($item->original_thread->image)
-                                    <div class="mb-4 rounded-2xl overflow-hidden border border-dark-600/50 group-hover:border-dark-500/50 transition-colors duration-200">
+                                    <div class="mb-3 sm:mb-4 rounded-2xl overflow-hidden border border-dark-600/50 group-hover:border-dark-500/50 transition-colors duration-200">
                                         <img 
                                             src="{{ Storage::url($item->original_thread->image) }}" 
                                             alt="Thread image" 
@@ -181,7 +181,7 @@
                             </a>
 
                             {{-- Thread Actions --}}
-                            <div class="mt-4">
+                            <div class="mt-3 sm:mt-4">
                                 <x-thread-actions :thread="$item->original_thread" />
                             </div>
                         </div>

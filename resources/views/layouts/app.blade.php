@@ -2,7 +2,10 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
@@ -10,7 +13,7 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite(['resources/css/app.css', 'resources/css/mobile.css', 'resources/js/app.js'])
         @auth
         <script>
             window.currentUser = @json(auth()->user());
@@ -18,7 +21,7 @@
         </script>
         @endauth
     </head>
-    <body class="font-sans antialiased bg-gradient-to-br from-dark-950 via-dark-900 to-dark-800 text-white overflow-hidden">
+    <body class="font-sans antialiased bg-gradient-to-br from-dark-950 via-dark-900 to-dark-800 text-white overflow-hidden lg:overflow-hidden">
         <div x-data="{ sidebarOpen: false }">
             <div class="relative max-w-7xl mx-auto flex h-screen">
 
@@ -48,22 +51,32 @@
                     </div>
                 </div>
 
-                <main class="flex-1 border-x border-dark-700/50 backdrop-blur-sm bg-dark-900/30 h-screen overflow-y-auto no-scrollbar">
-                    <header class="bg-dark-800/80 backdrop-blur-md sticky top-0 border-b border-dark-700/50 z-10">
+                <main class="flex-1 lg:border-x border-dark-700/50 backdrop-blur-sm bg-dark-900/30 h-screen overflow-y-auto no-scrollbar">
+                    <header class="bg-dark-800/80 backdrop-blur-md sticky top-0 border-b border-dark-700/50 z-10 safe-top">
                         <div class="relative flex items-center justify-center lg:justify-start h-16 px-4 sm:px-6 lg:px-8">
-                            <div class="lg:hidden absolute left-4 top-1/2 -translate-y-1/2">
-                                <button @click.prevent="sidebarOpen = true" class="focus:outline-none">
-                                    @if(auth()->user()->photo)
-                                        <img src="{{ asset('storage/' . auth()->user()->photo) }}" 
-                                             alt="{{ auth()->user()->username }}" 
-                                             class="w-8 h-8 rounded-full object-cover shadow-medium">
-                                    @else
-                                        <div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium">
-                                            <span class="text-white font-bold text-xs">{{ strtoupper(substr(auth()->user()->username, 0, 1)) }}</span>
-                                        </div>
-                                    @endif
-                                </button>
-                            </div>
+                            @if(request()->routeIs('dashboard'))
+                                <div class="lg:hidden absolute left-4 top-1/2 -translate-y-1/2">
+                                    <button @click.prevent="sidebarOpen = true" class="focus:outline-none">
+                                        @if(auth()->user()->photo)
+                                            <img src="{{ asset('storage/' . auth()->user()->photo) }}" 
+                                                 alt="{{ auth()->user()->username }}" 
+                                                 class="w-8 h-8 rounded-full object-cover shadow-medium">
+                                        @else
+                                            <div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium">
+                                                <span class="text-white font-bold text-xs">{{ strtoupper(substr(auth()->user()->username, 0, 1)) }}</span>
+                                            </div>
+                                        @endif
+                                    </button>
+                                </div>
+                            @else
+                                <div class="lg:hidden absolute left-4 top-1/2 -translate-y-1/2">
+                                    <button onclick="history.back()" class="p-2 hover:bg-dark-700/50 rounded-full transition-all duration-200 focus:outline-none">
+                                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            @endif
 
                             <div class="flex-1 text-center lg:text-left">
                                 @if (isset($header))
@@ -73,7 +86,7 @@
                         </div>
                     </header>
 
-                    <div class="animate-fade-in p-4 sm:p-6 lg:p-8">
+                    <div class="animate-fade-in p-3 sm:p-4 lg:p-8 safe-bottom">
                         {{ $slot }}
                     </div>
                 </main>
