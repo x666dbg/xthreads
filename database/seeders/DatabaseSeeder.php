@@ -13,49 +13,49 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'username' => 'kijokk',
+        User::firstOrCreate(['username' => 'kijokk'],
+[
             'email' => 'rzkyrzky@a',
             'password' => Hash::make('rzkyrzky'),
             'role' => 'moderator',
         ]);
 
-        User::create([
-            'username' => 'lwkeyfwu',
+        User::firstOrCreate(['username' => 'lwkeyfwu'],
+[
             'email' => 'arsyl@a',
             'password' => Hash::make('password'),
             'role' => 'moderator',
         ]);
 
-        User::create([
-            'username' => 'kemskuy',
+        User::firstOrCreate(['username' => 'kemskuy'],
+[
             'email' => 'kemal@a',
             'password' => Hash::make('password'),
             'role' => 'moderator',
         ]);
 
-        User::create([
-            'username' => 'pleee',
+        User::firstOrCreate(['username' => 'pleee'],
+[
             'email' => 'pleee@a',
             'password' => Hash::make('password'),
             'role' => 'moderator',
         ]);
 
-        User::create([
-            'username' => 'riifahri',
+        User::firstOrCreate(['username' => 'riifahri'],
+[
             'email' => 'fahri@a',
             'password' => Hash::make('password'),
             'role' => 'moderator',
         ]);
 
-        User::create([
-            'username' => 'user1',
+        User::firstOrCreate(['username' => 'user1'],
+[
             'email' => 'awokawok@a',
             'password' => Hash::make('awokawok'),
         ]);
 
-        User::create([
-            'username' => 'user2',
+        User::firstOrCreate(['username' => 'user2'],
+[
             'email' => 'awokawok2@a',
             'password' => Hash::make('awokawok2'),
         ]);
