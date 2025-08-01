@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Repost;
 use App\Models\Thread;
 use App\Notifications\ThreadReplyNotification;
+use App\Services\MentionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
@@ -77,6 +78,9 @@ class ThreadController extends Controller
         }
 
         $thread = $request->user()->threads()->create($validated);
+
+        $mentionService = new MentionService();
+        $mentionService->processMentions($validated['content'], $thread, $request->user());
 
         if (isset($validated['parent_id']) && $validated['parent_id']) {
             $parentThread = Thread::find($validated['parent_id']);

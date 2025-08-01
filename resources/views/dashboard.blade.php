@@ -8,7 +8,7 @@
 
     <div class="w-full max-w-2xl mx-auto">
         {{-- Form untuk Posting Thread Baru --}}
-        <div class="bg-dark-800/50 backdrop-blur-sm border border-dark-700/50 rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 animate-slide-down">
+        <div class="bg-dark-800/50 backdrop-blur-sm border border-dark-700/50 rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 animate-slide-down relative">
             <form method="POST" action="{{ route('threads.store') }}" enctype="multipart/form-data" class="space-y-4">
                 @csrf
                 <div class="flex items-start space-x-3 sm:space-x-4">
@@ -27,12 +27,18 @@
                     
                     {{-- Content Input --}}
                     <div class="flex-1">
-                        <textarea
-                            name="content"
-                            rows="4"
-                            class="w-full bg-transparent border-none text-white text-lg placeholder-dark-400 focus:outline-none resize-none"
-                            placeholder="What's happening, {{ auth()->user()->username }}?"
-                        ></textarea>
+                        <div class="relative">
+                            <textarea
+                                id="thread-content"
+                                name="content"
+                                rows="4"
+                                class="w-full bg-transparent border-none text-white text-lg placeholder-dark-400 focus:outline-none resize-none"
+                                placeholder="What's happening, {{ auth()->user()->username }}?"
+                            ></textarea>
+                            <div id="mention-dropdown" class="absolute z-50 w-full bg-dark-800 border border-dark-600 rounded-lg shadow-lg hidden max-h-48 overflow-y-auto mt-1">
+                                <!-- Mention suggestions will be populated here -->
+                            </div>
+                        </div>
                         @error('content') 
                             <div class="mt-2 text-accent-400 text-sm flex items-center">
                                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -162,23 +168,25 @@
                             </div>
 
                             {{-- Thread Content --}}
-                            <a href="{{ route('threads.show', $item->original_thread) }}" class="block group">
+                            <div class="group">
                                 <p class="text-white text-base sm:text-lg leading-relaxed mb-3 sm:mb-4 group-hover:text-gray-100 transition-colors duration-200">
-                                    {{ $item->original_thread->content }}
+                                    {!! app('App\Services\MentionService')->formatMentions($item->original_thread->content) !!}
                                 </p>
 
                                 {{-- Thread Image --}}
                                 @if ($item->original_thread->image)
-                                    <div class="mb-3 sm:mb-4 rounded-2xl overflow-hidden border border-dark-600/50 group-hover:border-dark-500/50 transition-colors duration-200">
-                                        <img 
-                                            src="{{ Storage::url($item->original_thread->image) }}" 
-                                            alt="Thread image" 
-                                            class="w-full h-auto object-cover group-hover:scale-[1.02] transition-transform duration-500"
-                                            loading="lazy"
-                                        >
-                                    </div>
+                                    <a href="{{ route('threads.show', $item->original_thread) }}" class="block">
+                                        <div class="mb-3 sm:mb-4 rounded-2xl overflow-hidden border border-dark-600/50 group-hover:border-dark-500/50 transition-colors duration-200">
+                                            <img 
+                                                src="{{ Storage::url($item->original_thread->image) }}" 
+                                                alt="Thread image" 
+                                                class="w-full h-auto object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                                                loading="lazy"
+                                            >
+                                        </div>
+                                    </a>
                                 @endif
-                            </a>
+                            </div>
 
                             {{-- Thread Actions --}}
                             <div class="mt-3 sm:mt-4">
@@ -230,8 +238,13 @@
             preview.classList.add('hidden');
         }
 
-        // Character count
-        document.querySelector('textarea[name="content"]').addEventListener('input', function() {
+        // Character count and mention autocomplete
+        const textarea = document.getElementById('thread-content');
+        const dropdown = document.getElementById('mention-dropdown');
+        let currentMention = null;
+        let mentionStart = -1;
+
+        textarea.addEventListener('input', function() {
             const charCount = document.getElementById('char-count');
             const length = this.value.length;
             charCount.textContent = length;
@@ -240,6 +253,139 @@
                 charCount.classList.add('text-accent-400');
             } else {
                 charCount.classList.remove('text-accent-400');
+            }
+
+            // Handle mention autocomplete
+            const cursorPosition = this.selectionStart;
+            const textBeforeCursor = this.value.substring(0, cursorPosition);
+            const mentionMatch = textBeforeCursor.match(/@(\w*)$/);
+
+            if (mentionMatch) {
+                const query = mentionMatch[1];
+                mentionStart = cursorPosition - mentionMatch[0].length;
+                currentMention = mentionMatch[0];
+
+                if (query.length >= 1) {
+                    searchUsers(query);
+                } else {
+                    hideDropdown();
+                }
+            } else {
+                hideDropdown();
+                currentMention = null;
+                mentionStart = -1;
+            }
+        });
+
+        textarea.addEventListener('keydown', function(e) {
+            if (dropdown.classList.contains('hidden')) return;
+
+            const items = dropdown.querySelectorAll('.mention-item');
+            let selected = dropdown.querySelector('.mention-item.selected');
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (selected) {
+                    selected.classList.remove('selected', 'bg-dark-700');
+                    const next = selected.nextElementSibling || items[0];
+                    next.classList.add('selected', 'bg-dark-700');
+                } else if (items.length > 0) {
+                    items[0].classList.add('selected', 'bg-dark-700');
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (selected) {
+                    selected.classList.remove('selected', 'bg-dark-700');
+                    const prev = selected.previousElementSibling || items[items.length - 1];
+                    prev.classList.add('selected', 'bg-dark-700');
+                } else if (items.length > 0) {
+                    items[items.length - 1].classList.add('selected', 'bg-dark-700');
+                }
+            } else if (e.key === 'Enter' || e.key === 'Tab') {
+                e.preventDefault();
+                if (selected) {
+                    selectUser(selected.dataset.username);
+                }
+            } else if (e.key === 'Escape') {
+                hideDropdown();
+            }
+        });
+
+        function searchUsers(query) {
+            fetch(`/api/users/search?q=${encodeURIComponent(query)}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.data.users.length > 0) {
+                    showDropdown(data.data.users);
+                } else {
+                    hideDropdown();
+                }
+            })
+            .catch(error => {
+                console.error('Error searching users:', error);
+                hideDropdown();
+            });
+        }
+
+        function showDropdown(users) {
+            dropdown.innerHTML = '';
+            users.forEach((user, index) => {
+                const div = document.createElement('div');
+                div.className = 'mention-item flex items-center p-3 hover:bg-dark-700 cursor-pointer transition-colors';
+                if (index === 0) div.classList.add('selected', 'bg-dark-700');
+                div.dataset.username = user.username;
+                
+                div.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <div class="flex-shrink-0">
+                            ${user.photo 
+                                ? `<img src="${user.photo}" alt="${user.username}" class="w-8 h-8 rounded-full object-cover">`
+                                : `<div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center">
+                                     <span class="text-white font-bold text-sm">${user.username.charAt(0).toUpperCase()}</span>
+                                   </div>`
+                            }
+                        </div>
+                        <div>
+                            <p class="text-white font-medium">@${user.username}</p>
+                        </div>
+                    </div>
+                `;
+                
+                div.addEventListener('click', () => selectUser(user.username));
+                dropdown.appendChild(div);
+            });
+            
+            dropdown.classList.remove('hidden');
+        }
+
+        function hideDropdown() {
+            dropdown.classList.add('hidden');
+        }
+
+        function selectUser(username) {
+            if (mentionStart !== -1 && currentMention) {
+                const before = textarea.value.substring(0, mentionStart);
+                const after = textarea.value.substring(mentionStart + currentMention.length);
+                textarea.value = before + '@' + username + ' ' + after;
+                
+                const newPosition = mentionStart + username.length + 2;
+                textarea.setSelectionRange(newPosition, newPosition);
+                textarea.focus();
+            }
+            hideDropdown();
+            currentMention = null;
+            mentionStart = -1;
+        }
+
+        // Hide dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!textarea.contains(e.target) && !dropdown.contains(e.target)) {
+                hideDropdown();
             }
         });
     </script>

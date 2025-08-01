@@ -44,6 +44,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/users/{user}/ban', [UserProfileController::class, 'ban'])->name('users.ban');
     Route::post('/users/{user}/unban', [UserProfileController::class, 'unban'])->name('users.unban');
 
+    Route::get('/api/users/search', [App\Http\Controllers\Api\UserController::class, 'search'])->name('api.users.search');
+
     Route::get('/{user:username}', [UserProfileController::class, 'show'])->name('profile.show');
     Route::post('/{user:username}/follow', [UserProfileController::class, 'follow'])->name('profile.follow');
     Route::post('/{user:username}/unfollow', [UserProfileController::class, 'unfollow'])->name('profile.unfollow');

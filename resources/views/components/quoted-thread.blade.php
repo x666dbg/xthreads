@@ -21,7 +21,7 @@
         @endif
         <span class="text-gray-500">{{ $thread->created_at->diffForHumans() }}</span>
     </div>
-    <p class="mt-1 text-gray-400 truncate">{{ $thread->content }}</p>
+    <p class="mt-1 text-gray-400 truncate">{!! app('App\Services\MentionService')->formatMentions($thread->content) !!}</p>
     @if ($thread->image)
         <img src="{{ Storage::url($thread->image) }}" alt="Gambar Thread Induk" class="mt-2 h-24 w-24 rounded-lg object-cover">
     @endif

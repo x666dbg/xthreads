@@ -38,7 +38,7 @@
                                 <small class="ml-1 text-sm text-gray-400">{{ $thread->created_at->diffForHumans() }}</small>
                             </div>
                          </div>
-                         <p class="mt-2 text-base sm:text-lg text-gray-100">{{ $thread->content }}</p>
+                         <p class="mt-2 text-base sm:text-lg text-gray-100">{!! app('App\Services\MentionService')->formatMentions($thread->content) !!}</p>
                          @if ($thread->image)
                              <div class="mt-3 sm:mt-4 max-w-lg overflow-hidden rounded-lg border dark:border-gray-700">
                                  <img src="{{ Storage::url($thread->image) }}" alt="Gambar Thread" class="w-full">

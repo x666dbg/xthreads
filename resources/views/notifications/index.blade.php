@@ -51,6 +51,13 @@
                                         </svg>
                                     </div>
                                     @break
+                                @case('mention')
+                                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-yellow-500/20 rounded-full flex items-center justify-center">
+                                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+                                        </svg>
+                                    </div>
+                                    @break
                                 @default
                                     <div class="w-10 h-10 bg-gray-500/20 rounded-full flex items-center justify-center">
                                         <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -71,6 +78,16 @@
                                     <!-- Additional details based on notification type -->
                                     @if(isset($notification->data['thread_id']))
                                         <a href="{{ route('threads.show', $notification->data['thread_id']) }}" 
+                                           class="text-primary-400 hover:text-primary-300 text-sm mt-1 inline-block">
+                                            View thread →
+                                        </a>
+                                    @elseif(isset($notification->data['thread_url']))
+                                        <a href="{{ $notification->data['thread_url'] }}" 
+                                           class="text-primary-400 hover:text-primary-300 text-sm mt-1 inline-block">
+                                            View thread →
+                                        </a>
+                                    @elseif(isset($notification->data['mentionable_id']))
+                                        <a href="{{ route('threads.show', $notification->data['mentionable_id']) }}" 
                                            class="text-primary-400 hover:text-primary-300 text-sm mt-1 inline-block">
                                             View thread →
                                         </a>

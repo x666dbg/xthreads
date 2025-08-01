@@ -79,4 +79,9 @@ class User extends Authenticatable
     {
         return $this->role === 'moderator';
     }
+
+    public function mentions()
+    {
+        return $this->hasMany(Mention::class, 'mentioned_user_id');
+    }
 }

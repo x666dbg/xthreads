@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Thread;
 use App\Models\Repost;
+use App\Services\MentionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
@@ -105,6 +106,9 @@ class ThreadController extends Controller
 
         $thread = Thread::create($threadData);
         $thread->load(['user', 'likes', 'repostedBy', 'children']);
+
+        $mentionService = new MentionService();
+        $mentionService->processMentions($request->content, $thread, $request->user());
 
         // Send notification for reply
         if (isset($threadData['parent_id']) && $threadData['parent_id']) {

@@ -36,4 +36,9 @@ class Thread extends Model
     {
         return $this->belongsToMany(User::class, 'reposts', 'thread_id', 'user_id')->withTimestamps();
     }
+
+    public function mentions()
+    {
+        return $this->morphMany(Mention::class, 'mentionable');
+    }
 }

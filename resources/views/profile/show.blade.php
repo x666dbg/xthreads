@@ -1,11 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center space-x-2 sm:space-x-3">
-            <button onclick="history.back()" class="p-2 hover:bg-dark-700/50 rounded-full transition-all duration-200">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                </svg>
-            </button>
+        <div class="flex items-center space-x-2 sm:space-x-3 ml-10">
             <div class="flex items-center space-x-3">
                 @if($user->photo)
                     <img src="{{ asset('storage/' . $user->photo) }}" 
@@ -124,7 +119,7 @@
 
                     @if($user->bio)
                         <p class="text-white text-base sm:text-lg">
-                            {{ $user->bio }}
+                            {!! app('App\Services\MentionService')->formatMentions($user->bio) !!}
                         </p>
                     @endif
 
@@ -241,23 +236,25 @@
                             </div>
 
                             {{-- Thread Content --}}
-                            <a href="{{ route('threads.show', $thread) }}" class="block group">
+                            <div class="group">
                                 <p class="text-white text-lg leading-relaxed mb-4 group-hover:text-gray-100 transition-colors duration-200">
-                                    <?php echo e($thread->content); ?>
+                                    {!! app('App\Services\MentionService')->formatMentions($thread->content) !!}
                                 </p>
 
                                 {{-- Thread Image --}}
                                 @if ($thread->image)
-                                    <div class="mb-4 rounded-2xl overflow-hidden border border-dark-600/50 group-hover:border-dark-500/50 transition-colors duration-200">
-                                        <img
-                                            src="{{ Storage::url($thread->image) }}"
-                                            alt="Thread image"
-                                            class="w-full h-auto object-cover group-hover:scale-[1.02] transition-transform duration-500"
-                                            loading="lazy"
-                                        >
-                                    </div>
+                                    <a href="{{ route('threads.show', $thread) }}" class="block">
+                                        <div class="mb-4 rounded-2xl overflow-hidden border border-dark-600/50 group-hover:border-dark-500/50 transition-colors duration-200">
+                                            <img
+                                                src="{{ Storage::url($thread->image) }}"
+                                                alt="Thread image"
+                                                class="w-full h-auto object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                                                loading="lazy"
+                                            >
+                                        </div>
+                                    </a>
                                 @endif
-                            </a>
+                            </div>
 
                             {{-- Thread Actions --}}
                             <div class="mt-4">

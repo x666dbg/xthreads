@@ -254,18 +254,14 @@ class UserController extends Controller
         $query = $request->get('q');
         
         $users = User::where('username', 'LIKE', "%{$query}%")
-            ->orWhere('email', 'LIKE', "%{$query}%")
-            ->limit(20)
+            ->limit(10)
             ->get();
 
         $formattedUsers = $users->map(function ($user) {
             return [
                 'id' => $user->id,
                 'username' => $user->username,
-                'email' => $user->email,
-                'followers_count' => $user->followers()->count(),
-                'following_count' => $user->following()->count(),
-                'threads_count' => $user->threads()->count(),
+                'photo' => $user->photo ? asset('storage/' . $user->photo) : null,
             ];
         });
 
