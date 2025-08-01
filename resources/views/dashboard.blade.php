@@ -168,23 +168,21 @@
                             </div>
 
                             {{-- Thread Content --}}
-                            <div class="group">
+                            <div class="group cursor-pointer thread-clickable" data-thread-url="{{ route('threads.show', $item->original_thread) }}">
                                 <p class="text-white text-base sm:text-lg leading-relaxed mb-3 sm:mb-4 group-hover:text-gray-100 transition-colors duration-200">
                                     {!! app('App\Services\MentionService')->formatMentions($item->original_thread->content) !!}
                                 </p>
 
                                 {{-- Thread Image --}}
                                 @if ($item->original_thread->image)
-                                    <a href="{{ route('threads.show', $item->original_thread) }}" class="block">
-                                        <div class="mb-3 sm:mb-4 rounded-2xl overflow-hidden border border-dark-600/50 group-hover:border-dark-500/50 transition-colors duration-200">
-                                            <img 
-                                                src="{{ Storage::url($item->original_thread->image) }}" 
-                                                alt="Thread image" 
-                                                class="w-full h-auto object-cover group-hover:scale-[1.02] transition-transform duration-500"
-                                                loading="lazy"
-                                            >
-                                        </div>
-                                    </a>
+                                    <div class="mb-3 sm:mb-4 rounded-2xl overflow-hidden border border-dark-600/50 group-hover:border-dark-500/50 transition-colors duration-200">
+                                        <img 
+                                            src="{{ Storage::url($item->original_thread->image) }}" 
+                                            alt="Thread image" 
+                                            class="w-full h-auto object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                                            loading="lazy"
+                                        >
+                                    </div>
                                 @endif
                             </div>
 
@@ -386,6 +384,26 @@
         document.addEventListener('click', function(e) {
             if (!textarea.contains(e.target) && !dropdown.contains(e.target)) {
                 hideDropdown();
+            }
+        });
+
+        // Handle thread click with proper event delegation
+        document.addEventListener('click', function(e) {
+            const threadClickable = e.target.closest('.thread-clickable');
+            if (threadClickable) {
+                // Don't navigate if clicking on a link (mention link)
+                if (e.target.tagName === 'A' || e.target.closest('a')) {
+                    return;
+                }
+                // Don't navigate if clicking on thread actions
+                if (e.target.closest('.thread-actions') || e.target.closest('button')) {
+                    return;
+                }
+                
+                const url = threadClickable.dataset.threadUrl;
+                if (url) {
+                    window.location.href = url;
+                }
             }
         });
     </script>
