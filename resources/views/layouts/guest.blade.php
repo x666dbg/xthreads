@@ -15,7 +15,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased bg-gradient-to-br from-dark-950 via-dark-900 to-dark-800 text-white min-h-screen">
-        <div class="min-h-screen flex items-center justify-center relative overflow-hidden">
+        <div class="min-h-screen flex justify-center py-12 relative overflow-hidden">
             <!-- Background Pattern -->
             <div class="absolute inset-0 bg-gradient-to-br from-primary-900/10 via-transparent to-secondary-900/10"></div>
             <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.1),transparent_50%)]"></div>

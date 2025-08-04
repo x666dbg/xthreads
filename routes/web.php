@@ -1,11 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ThreadController;
-use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\RepostController;
+use App\Http\Controllers\ThreadController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\UserProfileController;
 
 // 1. Route utama, arahkan ke login
@@ -13,15 +14,19 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// 2. Route dashboard, sangat spesifik
+// 2 Route untuk handle login google
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+
+// 3. Route dashboard, sangat spesifik
 Route::get('/dashboard', [ThreadController::class, 'index'])
     ->middleware(['auth', 'verified'])->name('dashboard');
 
-// 3. Masukkan semua route dari Breeze (login, register, dll) SEBELUM route rakus
+// 4. Masukkan semua route dari Breeze (login, register, dll) SEBELUM route rakus
 require __DIR__.'/auth.php';
 
 Route::middleware('auth')->group(function () {
-    // 4. Routes spesifik lainnya (threads, replies, edit profil)
+    // 5. Routes spesifik lainnya (threads, replies, edit profil)
     Route::post('/threads', [ThreadController::class, 'store'])->name('threads.store');
     Route::get('/threads/{thread}', [ThreadController::class, 'show'])->name('threads.show');
     Route::post('/threads/{thread}/replies', [ReplyController::class, 'store'])->name('replies.store');
@@ -41,7 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-    // 5. Terakhir, letakkan route yang "rakus" di bagian PALING BAWAH
+    // 6. Terakhir, letakkan route yang "rakus" di bagian PALING BAWAH
     // Ini adalah route untuk PROFIL PUBLIK.
     Route::get('/{user:username}', [UserProfileController::class, 'show'])->name('profile.show');
     Route::post('/{user:username}/follow', [UserProfileController::class, 'follow'])->name('profile.follow');
