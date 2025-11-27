@@ -13,18 +13,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-<<<<<<< HEAD
         User::firstOrCreate(['username' => 'kijokk'],
 [
             'email' => 'rzkyrzky@a',
             'password' => Hash::make('rzkyrzky'),
             'role' => 'moderator',
-=======
-        User::create([
-            'username' => 'lwkeyfwu',
-            'email' => 'arsyl@a',
-            'password' => Hash::make('password'),
->>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
         ]);
 
         User::firstOrCreate(['username' => 'lwkeyfwu'],
