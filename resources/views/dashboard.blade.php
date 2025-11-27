@@ -1,6 +1,5 @@
 <x-app-layout>
     <x-slot name="header">
-<<<<<<< HEAD
         <div>
             <h2 class="text-2xl font-bold text-white">Home</h2>
             <p class="text-dark-400 text-sm mt-1">Welcome back, {{ auth()->user()->username }}!</p>
@@ -16,46 +15,18 @@
                     {{-- User Avatar --}}
                     <div class="flex-shrink-0">
                         @if(auth()->user()->photo)
-                            <img src="{{ asset('storage/' . auth()->user()->photo) }}" 
-                                 alt="{{ auth()->user()->username }}" 
+                            <img src="{{ asset('storage/' . auth()->user()->photo) }}"
+                                 alt="{{ auth()->user()->username }}"
                                  class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover shadow-medium">
                         @else
                             <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium">
                                 <span class="text-white font-bold text-sm sm:text-lg">{{ strtoupper(substr(auth()->user()->username, 0, 1)) }}</span>
                             </div>
                         @endif
-=======
-        <div class="flex items-center justify-between">
-            @php $currentUser = auth()->user(); @endphp
-            <div>
-                <h2 class="text-2xl font-bold text-white">Home</h2>
-                <p class="text-dark-400 text-sm mt-1">Welcome back, <?php echo e($currentUser->username); ?>!</p>
-            </div>
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center">
-                    <span class="text-white font-bold text-sm"><?php echo e(strtoupper(substr($currentUser->username, 0, 1))); ?></span>
-                </div>
-            </div>
-        </div>
-    </x-slot>
-
-    <div class="max-w-2xl mx-auto">
-        {{-- Form untuk Posting Thread Baru --}}
-        <div class="bg-dark-800/50 backdrop-blur-sm border border-dark-700/50 rounded-2xl p-6 mb-6 animate-slide-down">
-            <form method="POST" action="{{ route('threads.store') }}" enctype="multipart/form-data" class="space-y-4">
-                @csrf
-                <div class="flex items-start space-x-4">
-                    {{-- User Avatar --}}
-                    <div class="flex-shrink-0">
-                        <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium">
-                            <span class="text-white font-bold text-lg">{{ strtoupper(substr(auth()->user()->username, 0, 1)) }}</span>
-                        </div>
->>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
                     </div>
-                    
+
                     {{-- Content Input --}}
                     <div class="flex-1">
-<<<<<<< HEAD
                         <div class="relative">
                             <textarea
                                 id="thread-content"
@@ -68,15 +39,7 @@
                                 <!-- Mention suggestions will be populated here -->
                             </div>
                         </div>
-=======
-                        <textarea
-                            name="content"
-                            rows="4"
-                            class="w-full bg-transparent border-none text-white text-lg placeholder-dark-400 focus:outline-none resize-none"
-                            placeholder="What's happening, <?php echo e($currentUser->username); ?>?"
-                        ></textarea>
->>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
-                        @error('content') 
+                        @error('content')
                             <div class="mt-2 text-accent-400 text-sm flex items-center">
                                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
@@ -90,12 +53,12 @@
                 {{-- Image Upload Section --}}
                 <div class="ml-16">
                     <div class="relative">
-                        <input 
-                            id="image" 
-                            name="image" 
-                            type="file" 
+                        <input
+                            id="image"
+                            name="image"
+                            type="file"
                             accept="image/*"
-                            class="hidden" 
+                            class="hidden"
                             onchange="previewImage(this)"
                         />
                         <div id="image-preview" class="hidden mt-4 relative">
@@ -106,7 +69,7 @@
                                 </svg>
                             </button>
                         </div>
-                        @error('image') 
+                        @error('image')
                             <div class="mt-2 text-accent-400 text-sm flex items-center">
                                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
@@ -118,39 +81,30 @@
                 </div>
 
                 {{-- Action Bar --}}
-<<<<<<< HEAD
                 <div class="ml-10 sm:ml-16 flex items-center justify-between pt-4 border-t border-dark-700/50">
                     <div class="flex items-center space-x-2 sm:space-x-4">
-=======
-                <div class="ml-16 flex items-center justify-between pt-4 border-t border-dark-700/50">
-                    <div class="flex items-center space-x-4">
->>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
                         {{-- Image Upload Button --}}
                         <button type="button" onclick="document.getElementById('image').click()" class="p-2 hover:bg-primary-600/20 rounded-full transition-all duration-200 group">
                             <svg class="w-5 h-5 text-primary-400 group-hover:text-primary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
                         </button>
-                        
+
                         {{-- Emoji Button --}}
                         <button type="button" class="p-2 hover:bg-secondary-600/20 rounded-full transition-all duration-200 group">
                             <svg class="w-5 h-5 text-secondary-400 group-hover:text-secondary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </button>
-                        
+
                         {{-- Character Count --}}
                         <div class="text-dark-400 text-sm">
                             <span id="char-count">0</span>/280
                         </div>
                     </div>
-                    
+
                     {{-- Post Button --}}
-<<<<<<< HEAD
                     <button type="submit" class="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white font-bold py-2 px-4 sm:px-6 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-colored disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base">
-=======
-                    <button type="submit" class="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white font-bold py-2 px-6 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-colored disabled:opacity-50 disabled:cursor-not-allowed">
->>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
                         Post
                     </button>
                 </div>
@@ -158,7 +112,6 @@
         </div>
 
         {{-- Timeline Threads --}}
-<<<<<<< HEAD
         <div class="space-y-4 sm:space-y-6">
             @foreach ($timeline as $item)
                 @php
@@ -166,11 +119,6 @@
                     $user = $thread->user;
                 @endphp
                 <article class="bg-dark-800/50 backdrop-blur-sm border border-dark-700/50 rounded-2xl p-4 sm:p-6 hover:bg-dark-700/30 transition-all duration-300 animate-slide-up">
-=======
-        <div class="space-y-6">
-            @foreach ($timeline as $item)
-                <article class="bg-dark-800/50 backdrop-blur-sm border border-dark-700/50 rounded-2xl p-6 hover:bg-dark-700/30 transition-all duration-300 animate-slide-up">
->>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
                     {{-- Repost Indicator --}}
                     @if ($item->is_repost)
                         <div class="mb-4 flex items-center text-dark-400 text-sm">
@@ -184,34 +132,23 @@
                         </div>
                     @endif
 
-<<<<<<< HEAD
                     <div class="flex space-x-3 sm:space-x-4" data-thread-id="{{ $item->original_thread->id }}">
                         {{-- User Avatar --}}
                         <div class="flex-shrink-0">
                             <a href="{{ route('profile.show', $item->original_thread->user->username) }}" class="block group">
                                 @if($item->original_thread->user->photo)
-                                    <img src="{{ asset('storage/' . $item->original_thread->user->photo) }}" 
-                                         alt="{{ $item->original_thread->user->username }}" 
+                                    <img src="{{ asset('storage/' . $item->original_thread->user->photo) }}"
+                                         alt="{{ $item->original_thread->user->username }}"
                                          class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover shadow-medium group-hover:scale-105 transition-transform duration-200">
                                 @else
                                     <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium group-hover:scale-105 transition-transform duration-200">
                                         <span class="text-white font-bold text-sm sm:text-lg">{{ strtoupper(substr($item->original_thread->user->username, 0, 1)) }}</span>
                                     </div>
                                 @endif
-=======
-                    <div class="flex space-x-4">
-                        {{-- User Avatar --}}
-                        <div class="flex-shrink-0">
-                            <a href="{{ route('profile.show', $item->original_thread->user->username) }}" class="block group">
-                                <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium group-hover:scale-105 transition-transform duration-200">
-                                    <span class="text-white font-bold text-lg">{{ strtoupper(substr($item->original_thread->user->username, 0, 1)) }}</span>
-                                </div>
->>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
                             </a>
                         </div>
 
                         {{-- Thread Content --}}
-<<<<<<< HEAD
                         <div class="flex-1 min-w-0">
                             {{-- User Info & Timestamp --}}
                             <div class="flex items-center space-x-1 sm:space-x-2 mb-3 flex-wrap">
@@ -234,58 +171,23 @@
                             <div class="group cursor-pointer thread-clickable" data-thread-url="{{ route('threads.show', $item->original_thread) }}">
                                 <p class="text-white text-base sm:text-lg leading-relaxed mb-3 sm:mb-4 group-hover:text-gray-100 transition-colors duration-200">
                                     {!! app('App\Services\MentionService')->formatMentions($item->original_thread->content) !!}
-=======
-                                <div class="flex-1 min-w-0">
-                            {{-- User Info & Timestamp --}}
-                            <div class="flex items-center space-x-2 mb-3">
-                                @php
-                                    $threadUser = $item->original_thread->user;
-                                    $username = $threadUser->username;
-                                @endphp
-                                <a href="{{ route('profile.show', $username) }}" class="font-bold text-white hover:text-primary-400 transition-colors duration-200">
-                                    <?php echo e($username); ?>
-                                </a>
-                                <span class="text-dark-400">@<?php echo e($username); ?></span>
-                                <span class="text-dark-500">•</span>
-                                <time class="text-dark-400 text-sm hover:text-dark-300 transition-colors duration-200" title="<?php echo e($item->created_at->format('M j, Y \a\t g:i A')); ?>">
-                                    <?php echo e($item->created_at->diffForHumans()); ?>
-                                </time>
-                            </div>
-
-
-                            {{-- Thread Content --}}
-                            <a href="{{ route('threads.show', $item->original_thread) }}" class="block group">
-                                <p class="text-white text-lg leading-relaxed mb-4 group-hover:text-gray-100 transition-colors duration-200">
-                                    {{ $item->original_thread->content }}
->>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
                                 </p>
 
                                 {{-- Thread Image --}}
                                 @if ($item->original_thread->image)
-<<<<<<< HEAD
                                     <div class="mb-3 sm:mb-4 rounded-2xl overflow-hidden border border-dark-600/50 group-hover:border-dark-500/50 transition-colors duration-200">
-=======
-                                    <div class="mb-4 rounded-2xl overflow-hidden border border-dark-600/50 group-hover:border-dark-500/50 transition-colors duration-200">
->>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
-                                        <img 
-                                            src="{{ Storage::url($item->original_thread->image) }}" 
-                                            alt="Thread image" 
+                                        <img
+                                            src="{{ Storage::url($item->original_thread->image) }}"
+                                            alt="Thread image"
                                             class="w-full h-auto object-cover group-hover:scale-[1.02] transition-transform duration-500"
                                             loading="lazy"
                                         >
                                     </div>
                                 @endif
-<<<<<<< HEAD
                             </div>
 
                             {{-- Thread Actions --}}
                             <div class="mt-3 sm:mt-4">
-=======
-                            </a>
-
-                            {{-- Thread Actions --}}
-                            <div class="mt-4">
->>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
                                 <x-thread-actions :thread="$item->original_thread" />
                             </div>
                         </div>
@@ -334,7 +236,6 @@
             preview.classList.add('hidden');
         }
 
-<<<<<<< HEAD
         // Character count and mention autocomplete
         const textarea = document.getElementById('thread-content');
         const dropdown = document.getElementById('mention-dropdown');
@@ -342,10 +243,6 @@
         let mentionStart = -1;
 
         textarea.addEventListener('input', function() {
-=======
-        // Character count
-        document.querySelector('textarea[name="content"]').addEventListener('input', function() {
->>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
             const charCount = document.getElementById('char-count');
             const length = this.value.length;
             charCount.textContent = length;
@@ -355,7 +252,6 @@
             } else {
                 charCount.classList.remove('text-accent-400');
             }
-<<<<<<< HEAD
 
             // Handle mention autocomplete
             const cursorPosition = this.selectionStart;
@@ -441,11 +337,11 @@
                 div.className = 'mention-item flex items-center p-3 hover:bg-dark-700 cursor-pointer transition-colors';
                 if (index === 0) div.classList.add('selected', 'bg-dark-700');
                 div.dataset.username = user.username;
-                
+
                 div.innerHTML = `
                     <div class="flex items-center space-x-3">
                         <div class="flex-shrink-0">
-                            ${user.photo 
+                            ${user.photo
                                 ? `<img src="${user.photo}" alt="${user.username}" class="w-8 h-8 rounded-full object-cover">`
                                 : `<div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center">
                                      <span class="text-white font-bold text-sm">${user.username.charAt(0).toUpperCase()}</span>
@@ -457,11 +353,11 @@
                         </div>
                     </div>
                 `;
-                
+
                 div.addEventListener('click', () => selectUser(user.username));
                 dropdown.appendChild(div);
             });
-            
+
             dropdown.classList.remove('hidden');
         }
 
@@ -474,7 +370,7 @@
                 const before = textarea.value.substring(0, mentionStart);
                 const after = textarea.value.substring(mentionStart + currentMention.length);
                 textarea.value = before + '@' + username + ' ' + after;
-                
+
                 const newPosition = mentionStart + username.length + 2;
                 textarea.setSelectionRange(newPosition, newPosition);
                 textarea.focus();
@@ -503,14 +399,12 @@
                 if (e.target.closest('.thread-actions') || e.target.closest('button')) {
                     return;
                 }
-                
+
                 const url = threadClickable.dataset.threadUrl;
                 if (url) {
                     window.location.href = url;
                 }
             }
-=======
->>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
         });
     </script>
 </x-app-layout>
