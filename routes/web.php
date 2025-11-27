@@ -8,12 +8,20 @@ use App\Http\Controllers\ThreadController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\NotificationController;
 
-// 1. Route utama, arahkan ke login
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
+<<<<<<< HEAD
+Route::get('/dashboard', [ThreadController::class, 'index'])
+    ->middleware(['auth', 'verified'])->name('dashboard');
+
+require __DIR__.'/auth.php';
+
+Route::middleware('auth')->group(function () {
+=======
 // 2 Route untuk handle login google
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
@@ -27,27 +35,39 @@ require __DIR__.'/auth.php';
 
 Route::middleware('auth')->group(function () {
     // 5. Routes spesifik lainnya (threads, replies, edit profil)
+>>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
     Route::post('/threads', [ThreadController::class, 'store'])->name('threads.store');
     Route::get('/threads/{thread}', [ThreadController::class, 'show'])->name('threads.show');
-    Route::post('/threads/{thread}/replies', [ReplyController::class, 'store'])->name('replies.store');
+    Route::delete('/threads/{thread}', [ThreadController::class, 'destroy'])->name('threads.destroy');
 
     Route::post('/threads/{thread}/like', [LikeController::class, 'likeThread'])->name('threads.like');
     Route::delete('/threads/{thread}/unlike', [LikeController::class, 'unlikeThread'])->name('threads.unlike');
     Route::post('/replies/{reply}/like', [LikeController::class, 'likeReply'])->name('replies.like');
     Route::delete('/replies/{reply}/unlike', [LikeController::class, 'unlikeReply'])->name('replies.unlike');
-
     Route::post('/threads/{thread}/repost', [RepostController::class, 'store'])->name('threads.repost');
     Route::delete('/threads/{thread}/repost', [RepostController::class, 'destroy'])->name('threads.repost.destroy');
 
-    // Route untuk PENGATURAN PROFIL (bawaan Breeze).
-    // Ini harus ada SEBELUM route profil publik.
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    Route::get('/profile/edit-full', [ProfileController::class, 'editFull'])->name('profile.edit-full');
+    Route::post('/profile/update-full', [ProfileController::class, 'updateFull'])->name('profile.update-full');
 
+    Route::post('/users/{user}/ban', [UserProfileController::class, 'ban'])->name('users.ban');
+    Route::post('/users/{user}/unban', [UserProfileController::class, 'unban'])->name('users.unban');
 
+    Route::get('/api/users/search', [App\Http\Controllers\Api\UserController::class, 'search'])->name('api.users.search');
+
+<<<<<<< HEAD
+=======
     // 6. Terakhir, letakkan route yang "rakus" di bagian PALING BAWAH
     // Ini adalah route untuk PROFIL PUBLIK.
+>>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
     Route::get('/{user:username}', [UserProfileController::class, 'show'])->name('profile.show');
     Route::post('/{user:username}/follow', [UserProfileController::class, 'follow'])->name('profile.follow');
     Route::post('/{user:username}/unfollow', [UserProfileController::class, 'unfollow'])->name('profile.unfollow');

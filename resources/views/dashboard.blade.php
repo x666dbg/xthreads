@@ -1,5 +1,30 @@
 <x-app-layout>
     <x-slot name="header">
+<<<<<<< HEAD
+        <div>
+            <h2 class="text-2xl font-bold text-white">Home</h2>
+            <p class="text-dark-400 text-sm mt-1">Welcome back, {{ auth()->user()->username }}!</p>
+        </div>
+    </x-slot>
+
+    <div class="w-full max-w-2xl mx-auto">
+        {{-- Form untuk Posting Thread Baru --}}
+        <div class="bg-dark-800/50 backdrop-blur-sm border border-dark-700/50 rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 animate-slide-down relative">
+            <form method="POST" action="{{ route('threads.store') }}" enctype="multipart/form-data" class="space-y-4">
+                @csrf
+                <div class="flex items-start space-x-3 sm:space-x-4">
+                    {{-- User Avatar --}}
+                    <div class="flex-shrink-0">
+                        @if(auth()->user()->photo)
+                            <img src="{{ asset('storage/' . auth()->user()->photo) }}" 
+                                 alt="{{ auth()->user()->username }}" 
+                                 class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover shadow-medium">
+                        @else
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium">
+                                <span class="text-white font-bold text-sm sm:text-lg">{{ strtoupper(substr(auth()->user()->username, 0, 1)) }}</span>
+                            </div>
+                        @endif
+=======
         <div class="flex items-center justify-between">
             @php $currentUser = auth()->user(); @endphp
             <div>
@@ -25,16 +50,32 @@
                         <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium">
                             <span class="text-white font-bold text-lg">{{ strtoupper(substr(auth()->user()->username, 0, 1)) }}</span>
                         </div>
+>>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
                     </div>
                     
                     {{-- Content Input --}}
                     <div class="flex-1">
+<<<<<<< HEAD
+                        <div class="relative">
+                            <textarea
+                                id="thread-content"
+                                name="content"
+                                rows="4"
+                                class="w-full bg-transparent border-none text-white text-lg placeholder-dark-400 focus:outline-none resize-none"
+                                placeholder="What's happening, {{ auth()->user()->username }}?"
+                            ></textarea>
+                            <div id="mention-dropdown" class="absolute z-50 w-full bg-dark-800 border border-dark-600 rounded-lg shadow-lg hidden max-h-48 overflow-y-auto mt-1">
+                                <!-- Mention suggestions will be populated here -->
+                            </div>
+                        </div>
+=======
                         <textarea
                             name="content"
                             rows="4"
                             class="w-full bg-transparent border-none text-white text-lg placeholder-dark-400 focus:outline-none resize-none"
                             placeholder="What's happening, <?php echo e($currentUser->username); ?>?"
                         ></textarea>
+>>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
                         @error('content') 
                             <div class="mt-2 text-accent-400 text-sm flex items-center">
                                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -77,8 +118,13 @@
                 </div>
 
                 {{-- Action Bar --}}
+<<<<<<< HEAD
+                <div class="ml-10 sm:ml-16 flex items-center justify-between pt-4 border-t border-dark-700/50">
+                    <div class="flex items-center space-x-2 sm:space-x-4">
+=======
                 <div class="ml-16 flex items-center justify-between pt-4 border-t border-dark-700/50">
                     <div class="flex items-center space-x-4">
+>>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
                         {{-- Image Upload Button --}}
                         <button type="button" onclick="document.getElementById('image').click()" class="p-2 hover:bg-primary-600/20 rounded-full transition-all duration-200 group">
                             <svg class="w-5 h-5 text-primary-400 group-hover:text-primary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -100,7 +146,11 @@
                     </div>
                     
                     {{-- Post Button --}}
+<<<<<<< HEAD
+                    <button type="submit" class="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white font-bold py-2 px-4 sm:px-6 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-colored disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base">
+=======
                     <button type="submit" class="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white font-bold py-2 px-6 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-colored disabled:opacity-50 disabled:cursor-not-allowed">
+>>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
                         Post
                     </button>
                 </div>
@@ -108,9 +158,19 @@
         </div>
 
         {{-- Timeline Threads --}}
+<<<<<<< HEAD
+        <div class="space-y-4 sm:space-y-6">
+            @foreach ($timeline as $item)
+                @php
+                    $thread = $item->original_thread;
+                    $user = $thread->user;
+                @endphp
+                <article class="bg-dark-800/50 backdrop-blur-sm border border-dark-700/50 rounded-2xl p-4 sm:p-6 hover:bg-dark-700/30 transition-all duration-300 animate-slide-up">
+=======
         <div class="space-y-6">
             @foreach ($timeline as $item)
                 <article class="bg-dark-800/50 backdrop-blur-sm border border-dark-700/50 rounded-2xl p-6 hover:bg-dark-700/30 transition-all duration-300 animate-slide-up">
+>>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
                     {{-- Repost Indicator --}}
                     @if ($item->is_repost)
                         <div class="mb-4 flex items-center text-dark-400 text-sm">
@@ -124,6 +184,21 @@
                         </div>
                     @endif
 
+<<<<<<< HEAD
+                    <div class="flex space-x-3 sm:space-x-4" data-thread-id="{{ $item->original_thread->id }}">
+                        {{-- User Avatar --}}
+                        <div class="flex-shrink-0">
+                            <a href="{{ route('profile.show', $item->original_thread->user->username) }}" class="block group">
+                                @if($item->original_thread->user->photo)
+                                    <img src="{{ asset('storage/' . $item->original_thread->user->photo) }}" 
+                                         alt="{{ $item->original_thread->user->username }}" 
+                                         class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover shadow-medium group-hover:scale-105 transition-transform duration-200">
+                                @else
+                                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium group-hover:scale-105 transition-transform duration-200">
+                                        <span class="text-white font-bold text-sm sm:text-lg">{{ strtoupper(substr($item->original_thread->user->username, 0, 1)) }}</span>
+                                    </div>
+                                @endif
+=======
                     <div class="flex space-x-4">
                         {{-- User Avatar --}}
                         <div class="flex-shrink-0">
@@ -131,10 +206,35 @@
                                 <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center shadow-medium group-hover:scale-105 transition-transform duration-200">
                                     <span class="text-white font-bold text-lg">{{ strtoupper(substr($item->original_thread->user->username, 0, 1)) }}</span>
                                 </div>
+>>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
                             </a>
                         </div>
 
                         {{-- Thread Content --}}
+<<<<<<< HEAD
+                        <div class="flex-1 min-w-0">
+                            {{-- User Info & Timestamp --}}
+                            <div class="flex items-center space-x-1 sm:space-x-2 mb-3 flex-wrap">
+                                <a href="{{ route('profile.show', $user->username) }}" class="font-bold text-white hover:text-primary-400 transition-colors duration-200 flex items-center">
+                                   <span>{{ $user->username }}</span>
+                                </a>
+                                @if ($user->isModerator())
+                                    <x-moderator-badge />
+                                @endif
+                                <span class="text-dark-400 text-sm">@ {{ $user->username }}</span>
+                                <span class="text-dark-500 hidden sm:inline">•</span>
+                                <a href="{{ route('threads.show', $thread) }}">
+                                    <time class="text-dark-400 text-sm hover:text-dark-300 transition-colors duration-200" title="{{ $item->created_at->format('M j, Y \a\t g:i A') }}">
+                                        {{ $item->created_at->diffForHumans() }}
+                                    </time>
+                                </a>
+                            </div>
+
+                            {{-- Thread Content --}}
+                            <div class="group cursor-pointer thread-clickable" data-thread-url="{{ route('threads.show', $item->original_thread) }}">
+                                <p class="text-white text-base sm:text-lg leading-relaxed mb-3 sm:mb-4 group-hover:text-gray-100 transition-colors duration-200">
+                                    {!! app('App\Services\MentionService')->formatMentions($item->original_thread->content) !!}
+=======
                                 <div class="flex-1 min-w-0">
                             {{-- User Info & Timestamp --}}
                             <div class="flex items-center space-x-2 mb-3">
@@ -157,11 +257,16 @@
                             <a href="{{ route('threads.show', $item->original_thread) }}" class="block group">
                                 <p class="text-white text-lg leading-relaxed mb-4 group-hover:text-gray-100 transition-colors duration-200">
                                     {{ $item->original_thread->content }}
+>>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
                                 </p>
 
                                 {{-- Thread Image --}}
                                 @if ($item->original_thread->image)
+<<<<<<< HEAD
+                                    <div class="mb-3 sm:mb-4 rounded-2xl overflow-hidden border border-dark-600/50 group-hover:border-dark-500/50 transition-colors duration-200">
+=======
                                     <div class="mb-4 rounded-2xl overflow-hidden border border-dark-600/50 group-hover:border-dark-500/50 transition-colors duration-200">
+>>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
                                         <img 
                                             src="{{ Storage::url($item->original_thread->image) }}" 
                                             alt="Thread image" 
@@ -170,10 +275,17 @@
                                         >
                                     </div>
                                 @endif
+<<<<<<< HEAD
+                            </div>
+
+                            {{-- Thread Actions --}}
+                            <div class="mt-3 sm:mt-4">
+=======
                             </a>
 
                             {{-- Thread Actions --}}
                             <div class="mt-4">
+>>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
                                 <x-thread-actions :thread="$item->original_thread" />
                             </div>
                         </div>
@@ -222,8 +334,18 @@
             preview.classList.add('hidden');
         }
 
+<<<<<<< HEAD
+        // Character count and mention autocomplete
+        const textarea = document.getElementById('thread-content');
+        const dropdown = document.getElementById('mention-dropdown');
+        let currentMention = null;
+        let mentionStart = -1;
+
+        textarea.addEventListener('input', function() {
+=======
         // Character count
         document.querySelector('textarea[name="content"]').addEventListener('input', function() {
+>>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
             const charCount = document.getElementById('char-count');
             const length = this.value.length;
             charCount.textContent = length;
@@ -233,6 +355,162 @@
             } else {
                 charCount.classList.remove('text-accent-400');
             }
+<<<<<<< HEAD
+
+            // Handle mention autocomplete
+            const cursorPosition = this.selectionStart;
+            const textBeforeCursor = this.value.substring(0, cursorPosition);
+            const mentionMatch = textBeforeCursor.match(/@(\w*)$/);
+
+            if (mentionMatch) {
+                const query = mentionMatch[1];
+                mentionStart = cursorPosition - mentionMatch[0].length;
+                currentMention = mentionMatch[0];
+
+                if (query.length >= 1) {
+                    searchUsers(query);
+                } else {
+                    hideDropdown();
+                }
+            } else {
+                hideDropdown();
+                currentMention = null;
+                mentionStart = -1;
+            }
+        });
+
+        textarea.addEventListener('keydown', function(e) {
+            if (dropdown.classList.contains('hidden')) return;
+
+            const items = dropdown.querySelectorAll('.mention-item');
+            let selected = dropdown.querySelector('.mention-item.selected');
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (selected) {
+                    selected.classList.remove('selected', 'bg-dark-700');
+                    const next = selected.nextElementSibling || items[0];
+                    next.classList.add('selected', 'bg-dark-700');
+                } else if (items.length > 0) {
+                    items[0].classList.add('selected', 'bg-dark-700');
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (selected) {
+                    selected.classList.remove('selected', 'bg-dark-700');
+                    const prev = selected.previousElementSibling || items[items.length - 1];
+                    prev.classList.add('selected', 'bg-dark-700');
+                } else if (items.length > 0) {
+                    items[items.length - 1].classList.add('selected', 'bg-dark-700');
+                }
+            } else if (e.key === 'Enter' || e.key === 'Tab') {
+                e.preventDefault();
+                if (selected) {
+                    selectUser(selected.dataset.username);
+                }
+            } else if (e.key === 'Escape') {
+                hideDropdown();
+            }
+        });
+
+        function searchUsers(query) {
+            fetch(`/api/users/search?q=${encodeURIComponent(query)}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.data.users.length > 0) {
+                    showDropdown(data.data.users);
+                } else {
+                    hideDropdown();
+                }
+            })
+            .catch(error => {
+                console.error('Error searching users:', error);
+                hideDropdown();
+            });
+        }
+
+        function showDropdown(users) {
+            dropdown.innerHTML = '';
+            users.forEach((user, index) => {
+                const div = document.createElement('div');
+                div.className = 'mention-item flex items-center p-3 hover:bg-dark-700 cursor-pointer transition-colors';
+                if (index === 0) div.classList.add('selected', 'bg-dark-700');
+                div.dataset.username = user.username;
+                
+                div.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <div class="flex-shrink-0">
+                            ${user.photo 
+                                ? `<img src="${user.photo}" alt="${user.username}" class="w-8 h-8 rounded-full object-cover">`
+                                : `<div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center">
+                                     <span class="text-white font-bold text-sm">${user.username.charAt(0).toUpperCase()}</span>
+                                   </div>`
+                            }
+                        </div>
+                        <div>
+                            <p class="text-white font-medium">@${user.username}</p>
+                        </div>
+                    </div>
+                `;
+                
+                div.addEventListener('click', () => selectUser(user.username));
+                dropdown.appendChild(div);
+            });
+            
+            dropdown.classList.remove('hidden');
+        }
+
+        function hideDropdown() {
+            dropdown.classList.add('hidden');
+        }
+
+        function selectUser(username) {
+            if (mentionStart !== -1 && currentMention) {
+                const before = textarea.value.substring(0, mentionStart);
+                const after = textarea.value.substring(mentionStart + currentMention.length);
+                textarea.value = before + '@' + username + ' ' + after;
+                
+                const newPosition = mentionStart + username.length + 2;
+                textarea.setSelectionRange(newPosition, newPosition);
+                textarea.focus();
+            }
+            hideDropdown();
+            currentMention = null;
+            mentionStart = -1;
+        }
+
+        // Hide dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!textarea.contains(e.target) && !dropdown.contains(e.target)) {
+                hideDropdown();
+            }
+        });
+
+        // Handle thread click with proper event delegation
+        document.addEventListener('click', function(e) {
+            const threadClickable = e.target.closest('.thread-clickable');
+            if (threadClickable) {
+                // Don't navigate if clicking on a link (mention link)
+                if (e.target.tagName === 'A' || e.target.closest('a')) {
+                    return;
+                }
+                // Don't navigate if clicking on thread actions
+                if (e.target.closest('.thread-actions') || e.target.closest('button')) {
+                    return;
+                }
+                
+                const url = threadClickable.dataset.threadUrl;
+                if (url) {
+                    window.location.href = url;
+                }
+            }
+=======
+>>>>>>> a6ba3b169345ae6e604db59e1cfdea982481a5ca
         });
     </script>
 </x-app-layout>
