@@ -98,7 +98,7 @@ class AuthController extends Controller
     public function me(Request $request)
     {
         $user = $request->user();
-        
+
         return response()->json([
             'success' => true,
             'data' => [
@@ -106,6 +106,7 @@ class AuthController extends Controller
                     'id' => $user->id,
                     'username' => $user->username,
                     'email' => $user->email,
+                    'photo_profile' => $user->photo ? asset('storage/' . $user->photo) : null,
                     'created_at' => $user->created_at,
                     'followers_count' => $user->followers()->count(),
                     'following_count' => $user->following()->count(),

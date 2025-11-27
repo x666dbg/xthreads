@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\LikeController;
 use App\Http\Controllers\Api\RepostController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\ProfileController;
 
 // Public routes (no authentication required)
 Route::prefix('auth')->group(function () {
@@ -17,6 +18,12 @@ Route::prefix('auth')->group(function () {
 
 // Protected routes (authentication required)
 Route::middleware('auth:sanctum')->group(function () {
+
+    // Edit Profile
+    Route::prefix('profile')->group(function () {
+        Route::post('/update', [ProfileController::class, 'update']);
+        Route::delete('/delete', [ProfileController::class, 'delete']);
+    });
 
     // Auth routes
     Route::prefix('auth')->group(function () {

@@ -36,6 +36,7 @@ class ThreadController extends Controller
                 'user' => [
                     'id' => $thread->user->id,
                     'username' => $thread->user->username,
+                    'photo_profile' => $thread->user->photo ? asset('storage/' . $thread->user->photo) : null,
                 ],
                 'likes_count' => $thread->likes->count(),
                 'reposts_count' => $thread->repostedBy->count(),
@@ -153,6 +154,7 @@ class ThreadController extends Controller
                 'user' => [
                     'id' => $reply->user->id,
                     'username' => $reply->user->username,
+                    'photo_profile' => $reply->user->photo ? asset('storage/' . $reply->user->photo) : null,
                 ],
                 'likes_count' => $reply->likes->count(),
                 'created_at' => $reply->created_at,
@@ -169,6 +171,7 @@ class ThreadController extends Controller
                     'user' => [
                         'id' => $thread->user->id,
                         'username' => $thread->user->username,
+                        'photo' => $thread->user->photo ? asset('storage/' . $thread->user->photo) : null,
                     ],
                     'likes_count' => $thread->likes->count(),
                     'reposts_count' => $thread->repostedBy->count(),
