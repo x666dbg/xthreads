@@ -3,19 +3,32 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Thread;
 use App\Models\Repost;
+use App\Models\Thread;
 use App\Services\MentionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 class ThreadController extends Controller
 {
+    /**
+     * Hitung total replies secara rekursif (termasuk nested replies)
+     */
+    private function getTotalRepliesCount($thread)
+    {
+        $count = $thread->children->count();
+
+        foreach ($thread->children as $child) {
+            $count += $this->getTotalRepliesCount($child);
+        }
+
+        return $count;
+    }
+
     public function index(Request $request)
     {
-        // 1. Gunakan nama relasi children (bukan replies) + FK parent_id
         $threads = Thread::with(['user', 'likes', 'repostedBy', 'children'])
             ->whereNull('parent_id')
             ->latest()
@@ -32,15 +45,15 @@ class ThreadController extends Controller
                 'id' => $thread->id,
                 'type' => 'thread',
                 'content' => $thread->content,
-                'image' => $thread->image ? asset('storage/' . $thread->image) : null,
+                'image' => $thread->image ? asset('storage/'.$thread->image) : null,
                 'user' => [
                     'id' => $thread->user->id,
                     'username' => $thread->user->username,
-                    'photo_profile' => $thread->user->photo ? asset('storage/' . $thread->user->photo) : null,
+                    'photo_profile' => $thread->user->photo ? asset('storage/'.$thread->user->photo) : null,
                 ],
                 'likes_count' => $thread->likes->count(),
                 'reposts_count' => $thread->repostedBy->count(),
-                'replies_count' => $thread->children->count(), // <-- children
+                'replies_count' => $this->getTotalRepliesCount($thread), // Total termasuk nested
                 'is_liked' => $request->user() ? $thread->isLikedBy($request->user()) : false,
                 'is_reposted' => $request->user() ? $thread->repostedBy->contains($request->user()) : false,
                 'created_at' => $thread->created_at,
@@ -52,7 +65,7 @@ class ThreadController extends Controller
                 'id' => $repost->thread->id,
                 'type' => 'repost',
                 'content' => $repost->thread->content,
-                'image' => $repost->thread->image ? asset('storage/' . $repost->thread->image) : null,
+                'image' => $repost->thread->image ? asset('storage/'.$repost->thread->image) : null,
                 'original_user' => [
                     'id' => $repost->thread->user->id,
                     'username' => $repost->thread->user->username,
@@ -63,7 +76,7 @@ class ThreadController extends Controller
                 ],
                 'likes_count' => $repost->thread->likes->count(),
                 'reposts_count' => $repost->thread->repostedBy->count(),
-                'replies_count' => $repost->thread->children->count(), // <-- children
+                'replies_count' => $this->getTotalRepliesCount($repost->thread),
                 'is_liked' => $request->user() ? $repost->thread->isLikedBy($request->user()) : false,
                 'is_reposted' => $request->user() ? $repost->thread->repostedBy->contains($request->user()) : false,
                 'created_at' => $repost->created_at,
@@ -74,7 +87,7 @@ class ThreadController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => ['timeline' => $timeline]
+            'data' => ['timeline' => $timeline],
         ]);
     }
 
@@ -83,24 +96,24 @@ class ThreadController extends Controller
         $request->validate([
             'content' => 'required|string|max:280',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'parent_thread_id' => 'nullable|exists:threads,id'
+            'parent_thread_id' => 'nullable|exists:threads,id',
         ]);
 
         $threadData = [
             'content' => $request->content,
             'user_id' => $request->user()->id,
-            'parent_id' => $request->parent_thread_id, // <-- sesuaikan nama kolom
+            'parent_id' => $request->parent_thread_id,
         ];
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $filename = time() . '_' . $image->getClientOriginalName();
+            $filename = time().'_'.$image->getClientOriginalName();
 
-            $manager = new ImageManager(new Driver());
+            $manager = new ImageManager(new Driver);
             $resizedImage = $manager->read($image->getPathname())
-                ->scale(width: 800, height: 600); // <-- v3
+                ->scale(width: 800, height: 600);
 
-            $path = 'images/' . $filename;
+            $path = 'images/'.$filename;
             Storage::disk('public')->put($path, $resizedImage->encode());
             $threadData['image'] = $path;
         }
@@ -108,7 +121,7 @@ class ThreadController extends Controller
         $thread = Thread::create($threadData);
         $thread->load(['user', 'likes', 'repostedBy', 'children']);
 
-        $mentionService = new MentionService();
+        $mentionService = new MentionService;
         $mentionService->processMentions($request->content, $thread, $request->user());
 
         // Send notification for reply
@@ -126,37 +139,40 @@ class ThreadController extends Controller
                 'thread' => [
                     'id' => $thread->id,
                     'content' => $thread->content,
-                    'image' => $thread->image ? asset('storage/' . $thread->image) : null,
+                    'image' => $thread->image ? asset('storage/'.$thread->image) : null,
                     'user' => [
                         'id' => $thread->user->id,
                         'username' => $thread->user->username,
                     ],
                     'likes_count' => $thread->likes->count(),
                     'reposts_count' => $thread->repostedBy->count(),
-                    'replies_count' => $thread->children->count(),
-                    'is_reply' => !is_null($thread->parent_id),
+                    'replies_count' => $this->getTotalRepliesCount($thread),
+                    'is_reply' => ! is_null($thread->parent_id),
                     'parent_thread_id' => $thread->parent_id,
                     'created_at' => $thread->created_at,
-                ]
-            ]
+                ],
+            ],
         ], 201);
     }
 
-    public function show(Thread $thread)
+    public function show(Thread $thread, Request $request)
     {
-        $thread->load(['user', 'likes', 'repostedBy', 'children.user', 'children.likes']);
+        $thread->load(['user', 'likes', 'repostedBy', 'children.user', 'children.likes', 'children.children']);
 
-        $replies = $thread->children->map(function ($reply) {
+        $replies = $thread->children->map(function ($reply) use ($request) {
             return [
                 'id' => $reply->id,
                 'content' => $reply->content,
-                'image' => $reply->image ? asset('storage/' . $reply->image) : null,
+                'image' => $reply->image ? asset('storage/'.$reply->image) : null,
                 'user' => [
                     'id' => $reply->user->id,
                     'username' => $reply->user->username,
-                    'photo_profile' => $reply->user->photo ? asset('storage/' . $reply->user->photo) : null,
+                    'photo_profile' => $reply->user->photo ? asset('storage/'.$reply->user->photo) : null,
                 ],
                 'likes_count' => $reply->likes->count(),
+                'reposts_count' => $reply->repostedBy->count(),
+                'replies_count' => $this->getTotalRepliesCount($reply), // Total nested replies
+                'is_liked' => $request->user() ? $reply->isLikedBy($request->user()) : false,
                 'created_at' => $reply->created_at,
             ];
         });
@@ -167,19 +183,20 @@ class ThreadController extends Controller
                 'thread' => [
                     'id' => $thread->id,
                     'content' => $thread->content,
-                    'image' => $thread->image ? asset('storage/' . $thread->image) : null,
+                    'image' => $thread->image ? asset('storage/'.$thread->image) : null,
                     'user' => [
                         'id' => $thread->user->id,
                         'username' => $thread->user->username,
-                        'photo' => $thread->user->photo ? asset('storage/' . $thread->user->photo) : null,
+                        'photo' => $thread->user->photo ? asset('storage/'.$thread->user->photo) : null,
                     ],
                     'likes_count' => $thread->likes->count(),
                     'reposts_count' => $thread->repostedBy->count(),
-                    'replies_count' => $thread->children->count(),
+                    'replies_count' => $this->getTotalRepliesCount($thread),
+                    'is_liked' => $request->user() ? $thread->isLikedBy($request->user()) : false,
                     'created_at' => $thread->created_at,
                 ],
-                'replies' => $replies
-            ]
+                'replies' => $replies,
+            ],
         ]);
     }
 
@@ -188,7 +205,7 @@ class ThreadController extends Controller
         if ($thread->user_id !== $request->user()->id) {
             return response()->json([
                 'success' => false,
-                'message' => 'Unauthorized to delete this thread'
+                'message' => 'Unauthorized to delete this thread',
             ], 403);
         }
 
@@ -200,7 +217,7 @@ class ThreadController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Thread deleted successfully'
+            'message' => 'Thread deleted successfully',
         ]);
     }
 }
